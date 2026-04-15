@@ -15,6 +15,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useData } from '@/context/DataContext';
+import { getCompanyCurrentMonth, getCompanyToday } from '@/lib/date-utils';
 
 
 
@@ -28,7 +29,7 @@ export default function DashboardPage() {
   const [mode, setMode] = useState<'month' | 'range' | 'all'>('month');
   const [startMonth, setStartMonth] = useState<string>('');
   const [endMonth, setEndMonth] = useState<string>('');
-  const [viewingYear, setViewingYear] = useState<string>(new Date().getFullYear().toString());
+  const [viewingYear, setViewingYear] = useState<string>(getCompanyToday().substring(0, 4));
   const [selecting, setSelecting] = useState<'start' | 'end'>('start');
 
   const calculateMonths = useCallback((servData: any[]) => {
@@ -37,7 +38,7 @@ export default function DashboardPage() {
     setAvailableMonths(months);
     
     // Always default to current MTD (Month-to-Date) for consistency with Overview Pulse
-    const currentMonth = new Date().toISOString().substring(0, 7);
+    const currentMonth = getCompanyCurrentMonth();
     if (!startMonth) {
       setStartMonth(currentMonth);
       setEndMonth(currentMonth);

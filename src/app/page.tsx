@@ -16,6 +16,7 @@ import { CrewLeaderDisplay } from "@/components/CrewLeaderDisplay";
 import { ServiceDisplay } from "@/components/ServiceDisplay";
 import { YieldPulseClient } from "@/components/YieldPulseClient";
 import { ActivityTimelineClient } from "@/components/ActivityTimelineClient";
+import { getCompanyMonthStartISO } from "@/lib/date-utils";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
@@ -78,7 +79,7 @@ export default async function HomePage() {
     let mrr = 0;
 
     if (permissions.can_view_financials) {
-      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+      const monthStart = getCompanyMonthStartISO();
       const { data: communities } = await supabase.from('communities').select('id, name, total_monthly_price').eq('status', 'Active');
       const { data: mtdServices } = await supabase.from('service_history')
         .select(`
