@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CommunityDrawer } from './CommunityDrawer';
+import { formatTimelineDate } from '@/lib/date-utils';
 
 export function ActivityTimelineClient({ activities }: { activities: any[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export function ActivityTimelineClient({ activities }: { activities: any[] }) {
           return (
             <div key={i} className="card-hover" style={{ padding: "20px 24px", background: 'white', borderRadius: 20, border: '1px solid var(--border-subtle)', display: "flex", alignItems: "center", gap: 20, transition: 'all 0.2s' }}>
                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: 11, fontWeight: 800, textAlign: 'center', lineHeight: 1.1 }}>
-                  {new Date(r.service_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }).split(' ').map((s: string, idx: number) => <div key={idx}>{s}</div>)}
+                  {formatTimelineDate(r.service_date).map((s: string, idx: number) => <div key={idx}>{s}</div>)}
                </div>
                <div style={{ flex: 1 }}>
                   <button 

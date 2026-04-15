@@ -14,6 +14,19 @@ export function getCompanyToday(): string {
 }
 
 /**
+ * Returns a nicely formatted long date for the header (e.g. Wednesday, April 15)
+ */
+export function getCompanyLongDate(): string {
+  const d = new Date();
+  return d.toLocaleDateString('en-US', { 
+    timeZone: TIMEZONE,
+    weekday: 'long', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+
+/**
  * Returns the current month string in YYYY-MM format based on Eastern Time
  */
 export function getCompanyCurrentMonth(): string {
@@ -28,11 +41,12 @@ export function getCompanyMonthStartISO(): string {
 }
 
 /**
- * Safely parse a date string into a display date without timezone shifts
+ * Safely parse a date string into a display date without timezone shifts.
+ * Use for 'YYYY-MM-DD' formatted strings from the database.
  */
-export function formatDisplayDate(dateStr: string): string {
-  if (!dateStr) return '';
-  // Append noon time to prevent 'prev-day' shifts during parsing
+export function formatTimelineDate(dateStr: string): string[] {
+  if (!dateStr) return ['', ''];
+  // Lock to Noon to prevent day shifting
   const d = new Date(`${dateStr.split('T')[0]}T12:00:00`);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }).split(' ');
 }

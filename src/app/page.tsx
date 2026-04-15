@@ -16,7 +16,7 @@ import { CrewLeaderDisplay } from "@/components/CrewLeaderDisplay";
 import { ServiceDisplay } from "@/components/ServiceDisplay";
 import { YieldPulseClient } from "@/components/YieldPulseClient";
 import { ActivityTimelineClient } from "@/components/ActivityTimelineClient";
-import { getCompanyMonthStartISO } from "@/lib/date-utils";
+import { getCompanyMonthStartISO, getCompanyLongDate } from "@/lib/date-utils";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
@@ -159,7 +159,7 @@ export default async function HomePage() {
             Overview
           </h1>
           <p style={{ color: "var(--text-subtle)", fontSize: 16, marginTop: 8, fontWeight: 500 }}>
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} — Portfolio summary for {profile?.full_name?.split(' ')[0]}.
+            {getCompanyLongDate()} — Portfolio summary for {profile?.full_name?.split(' ')[0]}.
           </p>
         </div>
         <div />

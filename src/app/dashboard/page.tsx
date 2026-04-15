@@ -205,12 +205,12 @@ export default function DashboardPage() {
                <div className="flex flex-col gap-3">
                  <button onClick={() => setSelecting('start')} className={`p-5 rounded-2xl border transition-all text-left ${selecting === 'start' ? 'ring-2 ring-amber-500 border-amber-500 bg-amber-50' : 'bg-zinc-50 border-zinc-100 hover:bg-zinc-100'}`}>
                    <div className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight mb-2 font-mono">Channel A (Start)</div>
-                   <div className={`text-xl font-black ${selecting === 'start' ? 'text-amber-800' : 'text-zinc-900'}`}>{new Date(startMonth + '-01').toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
+                   <div className={`text-xl font-black ${selecting === 'start' ? 'text-amber-800' : 'text-zinc-900'}`}>{new Date(startMonth + '-01T12:00:00').toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
                  </button>
                  {mode === 'range' && (
                    <button onClick={() => setSelecting('end')} className={`p-5 rounded-2xl border transition-all text-left ${selecting === 'end' ? 'ring-2 ring-amber-500 border-amber-500 bg-amber-50' : 'bg-zinc-50 border-zinc-100 hover:bg-zinc-100'}`}>
                      <div className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight mb-2 font-mono">Channel B (End)</div>
-                     <div className={`text-xl font-black ${selecting === 'end' ? 'text-amber-800' : 'text-zinc-900'}`}>{new Date(endMonth + '-01').toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
+                     <div className={`text-xl font-black ${selecting === 'end' ? 'text-amber-800' : 'text-zinc-900'}`}>{new Date(endMonth + '-01T12:00:00').toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
                    </button>
                  )}
                </div>
