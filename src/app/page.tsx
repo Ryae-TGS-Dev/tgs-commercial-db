@@ -19,9 +19,22 @@ import { ActivityTimelineClient } from "@/components/ActivityTimelineClient";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center' }}>
+        <h2>System Configuration Pending</h2>
+        <p>Please ensure Supabase environment variables are set in Vercel.</p>
+      </div>
+    );
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         get(name: string) {
