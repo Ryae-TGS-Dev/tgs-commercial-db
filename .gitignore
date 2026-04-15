@@ -35,3 +35,6 @@ next-env.d.ts
 
 # Google Secrets
 src/lib/google/*.json
+
+.vercel
+.env*.local
