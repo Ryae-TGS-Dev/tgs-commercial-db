@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "mcp-builder",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/mcp-builder",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.342Z",
+  "contentHash": "b22aaf3efad4468d2b494618149a59433d26b4f19c3d162e9768a5430e345e70",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "mcp-builder",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "mcp-builder",
+        "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:33.118Z"
+}

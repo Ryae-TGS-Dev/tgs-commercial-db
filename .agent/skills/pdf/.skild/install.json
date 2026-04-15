@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "pdf",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/pdf",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:38:25.363Z",
+  "contentHash": "ba5a748c5907bc8e49766ae26c928262fadaf46ffd6bcc59f6228c4de7e33983",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "pdf",
+      "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+      "license": "Proprietary. LICENSE.txt has complete terms"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "pdf",
+        "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+        "license": "Proprietary. LICENSE.txt has complete terms"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:35.315Z"
+}

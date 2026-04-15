@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "frontend-design",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/frontend-design",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.357Z",
+  "contentHash": "2d7213d7574d5be4e90bff599a26be985b88058b9328a1751358ae9e15bfc53e",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "frontend-design",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "frontend-design",
+        "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:28.819Z"
+}

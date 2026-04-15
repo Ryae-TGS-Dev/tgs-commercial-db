@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "template",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/template",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.534Z",
+  "contentHash": "42257636b2945d8f14c4940f06a81e2c703844124f576733ecf8f2dce14ebb3c",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "template-skill",
+      "description": "Replace with description of the skill and when Claude should use it."
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "template-skill",
+        "description": "Replace with description of the skill and when Claude should use it."
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:43.923Z"
+}

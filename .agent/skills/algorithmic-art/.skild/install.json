@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "algorithmic-art",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/algorithmic-art",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.528Z",
+  "contentHash": "f4a04877af1391b310d4d770ff1ab99ffc62b323dad810b9a7fdbeaf0a0fcdd5",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "algorithmic-art",
+      "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "algorithmic-art",
+        "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:14.457Z"
+}

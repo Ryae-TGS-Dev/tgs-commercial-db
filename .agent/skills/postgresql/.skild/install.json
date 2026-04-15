@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "name": "postgresql",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "https://github.com/wshobson/agents/tree/main/plugins/database-design/skills/postgresql",
+  "sourceType": "github-url",
+  "installedAt": "2026-04-02T16:28:18.998Z",
+  "contentHash": "f5c8dc2a15d532bffdd1034190f2c1a69cebbec833da6307a3e4bb40ec84fd11",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "postgresql-table-design",
+      "description": "Use this skill when designing or reviewing a PostgreSQL-specific schema. Covers best-practices, data types, indexing, constraints, performance patterns, and advanced features"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "postgresql-table-design",
+        "description": "Use this skill when designing or reviewing a PostgreSQL-specific schema. Covers best-practices, data types, indexing, constraints, performance patterns, and advanced features"
+      }
+    }
+  }
+}

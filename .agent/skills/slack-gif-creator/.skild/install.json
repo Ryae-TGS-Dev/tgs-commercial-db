@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "slack-gif-creator",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/slack-gif-creator",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.265Z",
+  "contentHash": "46bde01eb1cffbe7bc5d6718bed618d3248a065016a03789cf9cc55f21523167",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "slack-gif-creator",
+      "description": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like \"make me a GIF of X doing Y for Slack.\"",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "slack-gif-creator",
+        "description": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like \"make me a GIF of X doing Y for Slack.\"",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:41.768Z"
+}

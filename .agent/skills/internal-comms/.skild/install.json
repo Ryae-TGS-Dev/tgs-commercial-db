@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "internal-comms",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/internal-comms",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.351Z",
+  "contentHash": "8562641c42f888d6f6ac34a34178eff1483c1e534979606420e5fba2a5fca874",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "internal-comms",
+      "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "internal-comms",
+        "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:30.936Z"
+}

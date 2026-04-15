@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "name": "subagent-driven-development",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "https://github.com/obra/superpowers/tree/main/skills/subagent-driven-development",
+  "sourceType": "github-url",
+  "installedAt": "2026-04-02T16:30:59.391Z",
+  "contentHash": "5f3ede03b3c711459ce9af9e02074b9595fe4ec3d8c108ffa320752431c75c35",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "subagent-driven-development",
+      "description": "Use when executing implementation plans with independent tasks in the current session"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "subagent-driven-development",
+        "description": "Use when executing implementation plans with independent tasks in the current session"
+      }
+    }
+  }
+}

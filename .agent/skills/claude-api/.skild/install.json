@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "claude-api",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/claude-api",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.435Z",
+  "contentHash": "3bbf9239e8e57c6bf2ca8d1afbe6de926d6aa750ffb51c662dd63987b9bbaf5d",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "claude-api",
+      "description": "Build apps with the Claude API or Anthropic SDK. TRIGGER when: code imports `anthropic`/`@anthropic-ai/sdk`/`claude_agent_sdk`, or user asks to use Claude API, Anthropic SDKs, or Agent SDK. DO NOT TRIGGER when: code imports `openai`/other AI SDK, general programming, or ML/data-science tasks.",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "claude-api",
+        "description": "Build apps with the Claude API or Anthropic SDK. TRIGGER when: code imports `anthropic`/`@anthropic-ai/sdk`/`claude_agent_sdk`, or user asks to use Claude API, Anthropic SDKs, or Agent SDK. DO NOT TRIGGER when: code imports `openai`/other AI SDK, general programming, or ML/data-science tasks.",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:22.059Z"
+}

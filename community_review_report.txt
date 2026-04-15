@@ -1,0 +1,1011 @@
+COMMUNITY DUPLICATE REVIEW REPORT
+===================================
+Total unique communities in DB: 991
+Clusters with potential duplicates: 122
+Communities in those clusters: 381
+
+[BAREFOOT BEACH] - 31 variants
+  * Barefoot Beach
+    Company: BPOA | Visits: 20 | Rate: $850/mo
+  * Barefoot Beach Bayfront Entrance
+    Company: Ability Management | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Blvd
+    Company: BPOA | Visits: 4 | Rate: (no price)
+  * Barefoot Beach Clubhouse
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Common Area and Houses
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Cottages
+    Company: Barefoot Beach Cottages | Visits: 0 | Rate: (no price)
+  * Barefoot Beach D , E, D, Docks and Clubhouse
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Garden
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Garden A, B, C, D and Common Areas
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Garden D
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Garden D and G
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Garden and Pool Areas
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens A
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens B, C and H
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens B, C, F, G, H, I, J, and K
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens C, E, F, G, H
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens J and K
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens K
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens and Clubhouse
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens and Clubhouse Houses
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Gardens and Common Area
+    Company: BPOA | Visits: 1 | Rate: $4,120/mo
+  * Barefoot Beach Gardens, Common Areas and Clubhouse
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Homes
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Homes and Gardens
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Homes, Gardens, Common Areas, and Clubhouse
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach House and garden
+    Company: BPOA | Visits: 1 | Rate: (no price)
+  * Barefoot Beach Houses and Garden
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach Master
+    Company: Ability Management | Visits: 1 | Rate: $183/mo
+  * Barefoot Beach Master Entrance
+    Company: BPOA | Visits: 0 | Rate: (no price)
+  * Barefoot Beach garden and homes
+    Company: BPOA | Visits: 1 | Rate: (no price)
+
+[THE GLADES] - 17 variants
+  * The Glades
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Clubhouse
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades New Section
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 1 and 2
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 10
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 10 & 11
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 4
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 5
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 5, 6, 7, 8, 9, 10 & 11
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Glades Section 6
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 7
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 9
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Section 9, 10 & 11
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Glades Zone 10
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Zone 3
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Zone 6
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Glades Zone 8
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[CARLTON LAKES] - 11 variants
+  * Carlton Lakes
+    Company: Fields of Green Lawncare | Visits: 2 | Rate: $650/mo
+  * Carlton Lakes HOA
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lakes HOA I
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lakes I HOA
+    Company: Greenscapes | Visits: 1 | Rate: $729/mo
+  * Carlton Lakes Master
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lakes Masters
+    Company: Greenscapes | Visits: 3 | Rate: $590/mo
+  * Carlton Lakes Villa
+    Company: Greenscapes | Visits: 1 | Rate: $842/mo
+  * Carlton Lakes Villa (Northridge Villas)
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lakes Villa I (Northridge Villas)
+    Company: Greenscapes | Visits: 0 | Rate: $842/mo
+  * Carlton Lakes Villa I (Northridge)
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lakes Villas
+    Company: Greenscapes | Visits: 1 | Rate: $842/mo
+
+[ST ANDREWS] - 9 variants
+  * St Andrews
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: (no price)
+  * St Andrews 3
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 4
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 4, 7, 8
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $620/mo
+  * St Andrews 5
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 7
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 7 & 8
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 7 and 8
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St Andrews 8
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[THE PLACE] - 8 variants
+  * The Place
+    Company: Down to Earth Landscaping | Visits: 35 | Rate: $30,548/mo
+  * The Place Common Areas Clubhouse and Entrance
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Common Areas, Clubhouse and Entrance
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Common Areas, Clubhouse, and front of the House Area
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Entrances and Beechcrest St
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Entrances and Beechcrest and Utopia St
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Phase 1
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Place Phase 2
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[VALENCIA TRAILS] - 7 variants
+  * Valencia Trails
+    Company: Down to Earth Landscaping | Visits: 12 | Rate: $2,606/mo
+  * Valencia Trails Clubhouse
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Valencia Trails Common Area
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Valencia Trails Dog Park
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Valencia Trails Entrance
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Valencia Trails Entrance and Common Area
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $826/mo
+  * Valencia Trails Model House and Main Entrance
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: (no price)
+
+[SPRINGS AT] - 6 variants
+  * Springs at Cape Coral
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Springs at Coral Shores
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Springs at Daniels
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Springs at Gulf Coast
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Springs at Hammock Cove
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Springs at Six Mile Cypress
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+
+[VERANDAS 1] - 6 variants
+  * Verandas 1 @ Lely Resort
+    Company: Greenscapes | Visits: 1 | Rate: $75/mo
+  * Verandas 1 @ Prestwick
+    Company: Greenscapes | Visits: 1 | Rate: $138/mo
+  * Verandas 1 @ Venezia
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verandas 1 Venezia
+    Company: Greenscapes | Visits: 2 | Rate: $159/mo
+  * Verandas 1 at Lely Resort
+    Company: Greenscapes | Visits: 1 | Rate: $75/mo
+  * Verandas 1 at Prestwick
+    Company: Greenscapes | Visits: 1 | Rate: $138/mo
+
+[CROSS CREEK] - 5 variants
+  * Cross Creek Estates
+    Company: Sunny Grove | Visits: 0 | Rate: (no price)
+  * Cross Creek Estates Commons
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Cross Creek Villas
+    Company: Down to Earth Landscaping | Visits: 2 | Rate: $130/mo
+  * Cross Creek Villas Commons
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $130/mo
+  * Cross Creek Villas I
+    Company: Greenscapes | Visits: 0 | Rate: $135/mo
+
+[CYPRESS TRACE] - 5 variants
+  * Cypress Trace
+    Company: P. Garcia Landscaping Inc | Visits: 0 | Rate: (no price)
+  * Cypress Trace Condo 1
+    Company: P. Garcia Landscaping Inc | Visits: 0 | Rate: (no price)
+  * Cypress Trace Condos
+    Company: Greenway Landscapes | Visits: 2 | Rate: $120/mo
+  * Cypress Trace II Condos
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+  * Cypress Trace Rec Association
+    Company: P. Garcia Landscaping Inc | Visits: 0 | Rate: (no price)
+
+[WILD PINES] - 5 variants
+  * Wild Pines
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Wild Pines Condo
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Wild Pines E
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Wild Pines East
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Wild Pines at Bonita Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[COVENT GARDEN] - 4 variants
+  * Covent Garden
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Covent Garden Condo
+    Company: Greenscapes | Visits: 2 | Rate: $975/mo
+  * Covent Garden Condo. Assoc.
+    Company: Greenscapes | Visits: 1 | Rate: $975/mo
+  * Covent Garden Ct
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[DELA SOL] - 4 variants
+  * Dela Sol
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Dela Sol Entrance, Clubhouse and Pool Area
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Dela Sol HOA
+    Company: Greenscapes | Visits: 2 | Rate: $240/mo
+  * Dela Sol HOA Common Area
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[GOLF VIEW] - 4 variants
+  * Golf View Villas 3
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Golf View Villas 4
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Golf View Villas 7
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Golf View Villas 8 (Seven Springs)
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+
+[PELICAN SOUND] - 4 variants
+  * Pelican Sound
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Pelican Sound Dr
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Pelican Sound Masters
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Pelican Sound Sports Area
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[ROYAL SEAFARER] - 4 variants
+  * Royal Seafarer
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Royal Seafarer Condominium
+    Company: Greenscapes | Visits: 1 | Rate: $120/mo
+  * Royal Seafarer Marco
+    Company: Greenscapes | Visits: 0 | Rate: $120/mo
+  * Royal Seafarer at Marco Island
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[ST. ANDREWS] - 4 variants
+  * St. Andrews 3
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St. Andrews 3 (Highland Hills Verandas)
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * St. Andrews Veranda
+    Company: Greenscapes | Visits: 1 | Rate: $75/mo
+  * St. Andrews Veranda I
+    Company: Greenscapes | Visits: 1 | Rate: (no price)
+
+[TERRACE 3] - 4 variants
+  * Terrace 3
+    Company: Greenscapes | Visits: 0 | Rate: $90/mo
+  * Terrace 3 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 3 at Treviso
+    Company: Greenscapes | Visits: 1 | Rate: $71/mo
+  * Terrace 3 at Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: $71/mo
+
+[TERRACE 4] - 4 variants
+  * Terrace 4
+    Company: Greenscapes | Visits: 0 | Rate: $45/mo
+  * Terrace 4 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 4 at Treviso
+    Company: Greenscapes | Visits: 1 | Rate: $70/mo
+  * Terrace 4 at Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: $71/mo
+
+[TERRACE 5] - 4 variants
+  * Terrace 5
+    Company: Greenscapes | Visits: 0 | Rate: $45/mo
+  * Terrace 5 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 5 at Treviso
+    Company: Greenscapes | Visits: 1 | Rate: $57/mo
+  * Terrace 5 at Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: $57/mo
+
+[TERRACE 6] - 4 variants
+  * Terrace 6
+    Company: Greenscapes | Visits: 0 | Rate: $45/mo
+  * Terrace 6 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 6 at Treviso
+    Company: Greenscapes | Visits: 1 | Rate: $53/mo
+  * Terrace 6 at Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: $53/mo
+
+[TWO RIVERS] - 4 variants
+  * Two Rivers Childrens and Two Rivers North Water
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Two Rivers East
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Two Rivers North Water
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Two Rivers West
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+
+[VERONA WALK] - 4 variants
+  * Verona Walk
+    Company: Greenscapes | Visits: 37 | Rate: $31,909/mo
+  * Verona Walk Common Area and Clubhouse
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verona Walk Common Areas
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verona Walk Genova Ct
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[VILLAS OF] - 4 variants
+  * Villas of Barefoot
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Villas of Barefoot Beach
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Villas of Deerwood
+    Company: Paula Knake | Visits: 0 | Rate: (no price)
+  * Villas of Escalante
+    Company: Greenscapes | Visits: 1 | Rate: $95/mo
+
+[WTC CORINTHIAN] - 4 variants
+  * WTC Corinthian & Alexandria Homes 1
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * WTC Corinthian & Alexandria Homes 2
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * WTC Corinthian Homes
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * WTC Corinthian and Alexandria
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[BRIGHTWATER PHASE] - 3 variants
+  * Brightwater Phase 1
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+  * Brightwater Phase 2
+    Company: Big Tree, Inc. | Visits: 1 | Rate: $100/mo
+  * Brightwater Phase 3
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+
+[CALUSA ISLAND] - 3 variants
+  * Calusa Island
+    Company: Greenscapes | Visits: 1 | Rate: $265/mo
+  * Calusa Island Village
+    Company: Greenscapes | Visits: 2 | Rate: $265/mo
+  * Calusa Island Village POA
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[COACH HOMES] - 3 variants
+  * Coach Homes 2 @ Treviso Bay
+    Company: Greenscapes | Visits: 2 | Rate: $323/mo
+  * Coach Homes 2 at Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Coach Homes 3
+    Company: Greenscapes | Visits: 0 | Rate: $135/mo
+
+[COCONUT SHORES] - 3 variants
+  * Coconut Shores
+    Company: Fields of Green Lawncare | Visits: 2 | Rate: $616/mo
+  * Coconut Shores E
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Coconut Shores East
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[DEL WEBB] - 3 variants
+  * Del Webb Naples
+    Company:  | Visits: 0 | Rate: (no price)
+  * Del Webb Oak Creek
+    Company: Sunny Grove | Visits: 9 | Rate: $5,750/mo
+  * Del Webb River Reserve
+    Company: Sperber | Visits: 0 | Rate: (no price)
+
+[DELA PARK] - 3 variants
+  * Dela Park Condo
+    Company: Greenscapes | Visits: 1 | Rate: $115/mo
+  * Dela Park Place
+    Company: Greenscapes | Visits: 1 | Rate: $115/mo
+  * Dela Park Place Condo
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[FCS CORP] - 3 variants
+  * FCS Corp 1
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+  * FCS Corp 2
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+  * FCS Corp 3
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+
+[GULF BREEZE] - 3 variants
+  * Gulf Breeze
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $250/mo
+  * Gulf Breeze Condo
+    Company: Down to Earth Landscaping | Visits: 2 | Rate: $250/mo
+  * Gulf Breeze at Vanderbilt Condos
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: (no price)
+
+[HIGHLAND WOODS] - 3 variants
+  * Highland Woods
+    Company: Greenscapes | Visits: 1 | Rate: $36/mo
+  * Highland Woods Terrace II
+    Company: Greenscapes | Visits: 2 | Rate: $36/mo
+  * Highland Woods Verandas
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[HYATT RESIDENCE] - 3 variants
+  * Hyatt Residence
+    Company: Brightview Naples | Visits: 0 | Rate: (no price)
+  * Hyatt Residence Club
+    Company: Brightview Fort Myers | Visits: 0 | Rate: (no price)
+  * Hyatt Residence Coconut Plantation
+    Company: Brightview Naples | Visits: 0 | Rate: (no price)
+
+[IMPERIAL GOLF] - 3 variants
+  * Imperial Golf Course
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $50/mo
+  * Imperial Golf Course Blvd
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $50/mo
+  * Imperial Golf Estates Commons
+    Company: Imperial Golf Estates HOA | Visits: 0 | Rate: (no price)
+
+[KEY HARBOUR] - 3 variants
+  * Key Harbour
+    Company: Sunrise Landscape | Visits: 1 | Rate: $70/mo
+  * Key Harbour Condo
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+  * Key Harbour Condos
+    Company: Big Tree, Inc. | Visits: 0 | Rate: $70/mo
+
+[MARSHE POINTE] - 3 variants
+  * Marshe Pointe
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+  * Marshe Pointe Common
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+  * Marshe Pointe Commons
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+
+[MIRASOL I] - 3 variants
+  * Mirasol I Condominium
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Mirasol I Condominium Association
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Mirasol I at Miromar Lakes
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[ST. LUCIA] - 3 variants
+  * St. Lucia
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * St. Lucia Condo
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $90/mo
+  * St. Lucia Condos
+    Company: All Green Landscape Management LLC | Visits: 2 | Rate: $90/mo
+
+[TERRACE 8] - 3 variants
+  * Terrace 8 & 9 at Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 8 and 9 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace 8 at Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: $61/mo
+
+[THE ARLINGTON] - 3 variants
+  * The Arlington
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Arlington at Naples
+    Company: LandCare | Visits: 0 | Rate: (no price)
+  * The Arlington of Naples
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[THE CORONADO] - 3 variants
+  * The Coronado
+    Company: Greenscapes | Visits: 2 | Rate: $45/mo
+  * The Coronado @ Pelican Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Coronado at Pelican Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[THE SANCTUARY] - 3 variants
+  * The Sanctuary
+    Company: Greenscapes | Visits: 1 | Rate: $31,909/mo
+  * The Sanctuary @ Pelican Bay
+    Company: Greenscapes | Visits: 1 | Rate: (no price)
+  * The Sanctuary at Pelican Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[VERANDAS 2,] - 3 variants
+  * Verandas 2, 3 & 4 @ Treviso Bay
+    Company: Greenscapes | Visits: 1 | Rate: (no price)
+  * Verandas 2, 3 and 4 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verandas 2, 3, 4 at Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[VILLAGE OF] - 3 variants
+  * Village of Barefoot Beach
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: (no price)
+  * Village of Sanibel Condo Association
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $120/mo
+  * Village of Sanibel Shoppes
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[8981 COLONIAL] - 2 variants
+  * 8981 Colonial Center
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+  * 8981 Colonial Center Dr
+    Company: Big Tree, Inc. | Visits: 1 | Rate: $85/mo
+
+[ARTESIA VILLAGE] - 2 variants
+  * Artesia Village Home
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+  * Artesia Village Homes
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $552/mo
+
+[AVIANO CARRIAGE] - 2 variants
+  * Aviano Carriage Homes 1
+    Company: Naples Luxury Lawn Service LLC | Visits: 0 | Rate: (no price)
+  * Aviano Carriage Homes 2
+    Company: Naples Luxury Lawn Service LLC | Visits: 0 | Rate: (no price)
+
+[BAYFRONT ENTRANCE] - 2 variants
+  * Bayfront Entrance
+    Company: Ability Management | Visits: 0 | Rate: (no price)
+  * Bayfront Entrance Area
+    Company: Ability Management | Visits: 0 | Rate: (no price)
+
+[BAYSHORE RANCH] - 2 variants
+  * Bayshore Ranch
+    Company: Sunny Grove | Visits: 1 | Rate: (no price)
+  * Bayshore Ranch Model Homes
+    Company: Sunny Grove | Visits: 0 | Rate: (no price)
+
+[BELLA TERRA] - 2 variants
+  * Bella Terra
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Bella Terra Villas 2
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[BENT CREEK] - 2 variants
+  * Bent Creek Common Areas
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Bent Creek Preserve
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[CALUSA PALMS] - 2 variants
+  * Calusa Palms
+    Company: Heritage Lawn | Visits: 0 | Rate: (no price)
+  * Calusa Palms 6
+    Company: Heritage Lawn | Visits: 0 | Rate: (no price)
+
+[CANOPY CIR] - 2 variants
+  * Canopy Cir
+    Company: Canopy HOA | Visits: 6 | Rate: $2,592/mo
+  * Canopy Cir Main Entrance
+    Company: Canopy HOA | Visits: 0 | Rate: (no price)
+
+[CAPE CORAL] - 2 variants
+  * Cape Coral
+    Company: Sunny Grove | Visits: 0 | Rate: (no price)
+  * Cape Coral Model Homes
+    Company: Greenway Landscapes | Visits: 0 | Rate: (no price)
+
+[CARLTON LAKE] - 2 variants
+  * Carlton Lake Master
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Carlton Lake Villas
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[CARRIAGE CIRCLE] - 2 variants
+  * Carriage Circle
+    Company: Greenscapes | Visits: 2 | Rate: $350/mo
+  * Carriage Circle Pool Area
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[CITY FURNITURE] - 2 variants
+  * City Furniture Fort Myers
+    Company: Renfroe & Jackson | Visits: 0 | Rate: (no price)
+  * City Furniture Naples
+    Company: Renfroe & Jackson | Visits: 0 | Rate: (no price)
+
+[CLUBSIDE AT] - 2 variants
+  * Clubside at the Strand
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $868/mo
+  * Clubside at the Strand (3 Iron Dr)
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $868/mo
+
+[COMPASS LANDING] - 2 variants
+  * Compass Landing
+    Company: Earth Wiz Landscaping & Irrigation | Visits: 0 | Rate: (no price)
+  * Compass Landing Common Area
+    Company: Earth Wiz Landscaping & Irrigation | Visits: 0 | Rate: (no price)
+
+[COUNTRY MANOR] - 2 variants
+  * Country Manor
+    Company: All Green Landscape Management LLC | Visits: 4 | Rate: $600/mo
+  * Country Manor Building 4
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+
+[DEER CROSSING] - 2 variants
+  * Deer Crossing (Naples)
+    Company: Brightview Naples | Visits: 3 | Rate: (no price)
+  * Deer Crossing Court Condo
+    Company: Brightview Naples | Visits: 0 | Rate: (no price)
+
+[DISCOUNT TIRE] - 2 variants
+  * Discount Tire
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Discount Tire Cape Coral
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[EAGLE RIDGE] - 2 variants
+  * Eagle Ridge
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $180/mo
+  * Eagle Ridge (Aries Way)
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[ENCLAVE AT] - 2 variants
+  * Enclave at Bonita Bay
+    Company: Greenscapes | Visits: 1 | Rate: (no price)
+  * Enclave at Naples
+    Company: Greenscapes | Visits: 1 | Rate: $675/mo
+
+[ENCOMPASS HEALTH] - 2 variants
+  * ENCOMPASS HEALTH
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+  * Encompass Health Rehabilitation Hospital (Naples)
+    Company: Brightview Naples | Visits: 1 | Rate: (no price)
+
+[ESTATES AT] - 2 variants
+  * Estates at Fort King
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Estates at Orange Blossom
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[FOREST GLEN] - 2 variants
+  * Forest Glen
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $650/mo
+  * Forest Glen Common Area
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $650/mo
+
+[FORT MYERS] - 2 variants
+  * Fort Myers Memorial Garden
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Fort Myers Memorial Gardens
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $1,733/mo
+
+[GLEN EAGLES] - 2 variants
+  * Glen Eagles IV
+    Company: Greenscapes | Visits: 0 | Rate: $155/mo
+  * Glen Eagles IV Condo
+    Company: Greenscapes | Visits: 1 | Rate: $155/mo
+
+[GREENS EDGE] - 2 variants
+  * Greens Edge
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+  * Greens Edge at Province Park
+    Company: Sunrise Landscape | Visits: 0 | Rate: (no price)
+
+[HAMMOCK GREENS] - 2 variants
+  * Hammock Greens 1-3
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Hammock Greens 4
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[HAMMOCK ISLES] - 2 variants
+  * Hammock Isles
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Hammock Isles at Bonita Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[HAMPTON PARK] - 2 variants
+  * Hampton Park
+    Company: Greenscapes | Visits: 5 | Rate: $617/mo
+  * Hampton Park Essex Square Blvd
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[LEE HEALTH] - 2 variants
+  * Lee Health Center
+    Company: Down to Earth Landscaping | Visits: 2 | Rate: $260/mo
+  * Lee Health Regional Cancer Center
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $260/mo
+
+[LENNAR AT] - 2 variants
+  * Lennar at Cape Coral
+    Company: Sunny Grove | Visits: 0 | Rate: (no price)
+  * Lennar at Ibis Landing Golf & country club
+    Company: Sunny Grove | Visits: 1 | Rate: $780/mo
+
+[LIGHTHOUSE BAY] - 2 variants
+  * Lighthouse Bay
+    Company: Greenscapes | Visits: 6 | Rate: $3,321/mo
+  * Lighthouse Bay at the Brooks
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[MARSH POINTE] - 2 variants
+  * Marsh Pointe
+    Company: Big Tree, Inc. | Visits: 1 | Rate: $100/mo
+  * Marsh Pointe (Commons)
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+
+[MILL RUN] - 2 variants
+  * Mill Run
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $40/mo
+  * Mill Run Rd
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+
+[NORTH PARK] - 2 variants
+  * North Park Isle
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * North Park Isle, Park East, Park East and North, Park Isle, and Park East and North Park Isle Shared Commons
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+
+[NORTHSHORE LAKE] - 2 variants
+  * Northshore Lake
+    Company: Down to Earth Landscaping | Visits: 2 | Rate: $621/mo
+  * Northshore Lake Villas
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: $621/mo
+
+[NOTTING HILL] - 2 variants
+  * Notting Hill
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $132/mo
+  * Notting Hill Ln
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $132/mo
+
+[OSTEGO BAY] - 2 variants
+  * Ostego Bay
+    Company: Pelican Lawn & Landscaping | Visits: 0 | Rate: (no price)
+  * Ostego Bay II
+    Company: Pelican Lawn & Landscaping | Visits: 1 | Rate: $180/mo
+
+[PARADISE POINTE] - 2 variants
+  * Paradise Pointe
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: $215/mo
+  * Paradise Pointe Commons
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $215/mo
+
+[PARK COLONY] - 2 variants
+  * Park Colony
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Park Colony Club
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[PAVILLION CLUB] - 2 variants
+  * Pavillion Club
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Pavillion Club Condos
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[PELICAN LAKES] - 2 variants
+  * Pelican Lakes
+    Company: Greenscapes | Visits: 4 | Rate: $4,432/mo
+  * Pelican Lakes Motor
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[PINEHURST GREEN] - 2 variants
+  * Pinehurst Green Ct
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Pinehurst Green Dr
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[PINEHURST GREENS] - 2 variants
+  * Pinehurst Greens Ct
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Pinehurst Greens Dr
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[POINTE ROYALE] - 2 variants
+  * Pointe Royale Condo
+    Company: Big Tree, Inc. | Visits: 1 | Rate: $300/mo
+  * Pointe Royale Condos
+    Company: Sunrise Landscape | Visits: 2 | Rate: $300/mo
+
+[PUBLIX AT] - 2 variants
+  * Publix at Orange Blossom
+    Company: Sunny Grove | Visits: 0 | Rate: (no price)
+  * Publix at Verdana
+    Company: Sunny Grove | Visits: 1 | Rate: $260/mo
+
+[ROYAL ARMS] - 2 variants
+  * Royal Arms Condo
+    Company: Royal Arms Ext. c/o Sentry Management | Visits: 1 | Rate: $720/mo
+  * Royal Arms Villas
+    Company: Fields of Green Lawncare | Visits: 1 | Rate: $300/mo
+
+[ROYAL MARCO] - 2 variants
+  * Royal Marco Pointe
+    Company: Greenscapes | Visits: 2 | Rate: $120/mo
+  * Royal Marco Pointe I
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[ROYAL PALM] - 2 variants
+  * Royal Palm Academy
+    Company: Naples Luxury Lawn Service LLC | Visits: 3 | Rate: $400/mo
+  * Royal Palm Golf Estates
+    Company: Greenscapes | Visits: 1 | Rate: $55/mo
+
+[SAN VISTA] - 2 variants
+  * San Vista
+    Company: Big Apple | Visits: 0 | Rate: $150/mo
+  * San Vista Circle
+    Company: Big Apple Landscaping | Visits: 2 | Rate: $150/mo
+
+[SILVERSTONE AT] - 2 variants
+  * Silverstone at the Quarry
+    Company: Greenscapes | Visits: 2 | Rate: $392/mo
+  * Silverstone at the Quarry Common Area
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[ST. MARISSA] - 2 variants
+  * St. Marissa
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * St. Marissa Condo
+    Company: Greenscapes | Visits: 2 | Rate: $50/mo
+
+[STONEGATE MASTER] - 2 variants
+  * Stonegate Master
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Stonegate Master HOA
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[TERRACE I] - 2 variants
+  * Terrace I @ Prestwick
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace I at Prestwick
+    Company: Greenscapes | Visits: 2 | Rate: $65/mo
+
+[TERRACE II] - 2 variants
+  * Terrace II @ Prestwick
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Terrace II at Prestwick
+    Company: Greenscapes | Visits: 2 | Rate: $56/mo
+
+[THE CARLISLE] - 2 variants
+  * The Carlisle
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * The Carlisle Naples
+    Company: Greenscapes | Visits: 2 | Rate: $620/mo
+
+[THE COLONY] - 2 variants
+  * The Colony at Morton Grove
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: $199/mo
+  * The Colony at Norton Grove
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+
+[THE CROSSINGS] - 2 variants
+  * The Crossings
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+  * The Crossings Orange Blossom
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+
+[THE GALLERY] - 2 variants
+  * The Gallery
+    Company: LandCare | Visits: 0 | Rate: (no price)
+  * The Gallery at Hacienda Lakes
+    Company: Big Tree, Inc. | Visits: 0 | Rate: (no price)
+
+[THE ORCHARDS] - 2 variants
+  * The Orchards
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $100/mo
+  * The Orchards Commons
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $100/mo
+
+[THE PRESERVE] - 2 variants
+  * The Preserve
+    Company: All Green Landscape Management LLC | Visits: 1 | Rate: (no price)
+  * The Preserve at the Shore
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[THE RESERVE] - 2 variants
+  * The Reserve
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * The Reserve at Pelican Landing
+    Company: Down to Earth Landscaping | Visits: 1 | Rate: $275/mo
+
+[THE RITZ-CARLTON] - 2 variants
+  * The Ritz-Carlton Beach
+    Company: LandCare | Visits: 4 | Rate: $450/mo
+  * The Ritz-Carlton Tiburon
+    Company: LandCare | Visits: 2 | Rate: (no price)
+
+[THE SEASONS] - 2 variants
+  * The Seasons at Naples Bay
+    Company: P. Garcia Landscaping Inc | Visits: 0 | Rate: (no price)
+  * The Seasons at Naples Cay
+    Company: P. Garcia Landscaping Inc | Visits: 0 | Rate: (no price)
+
+[THE VILLAS] - 2 variants
+  * The Villas of Hideaway Beach
+    Company: Greenscapes | Visits: 1 | Rate: (no price)
+  * The Villas of Hideaway Beach Condo
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[TIBURON BERMUDA] - 2 variants
+  * Tiburon Bermuda
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Tiburon Bermuda Commons
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[TUCKER'S COVE] - 2 variants
+  * Tucker's Cove
+    Company: Sunny Grove | Visits: 4 | Rate: (no price)
+  * Tucker's Cove and Webb's Reserve
+    Company: Sunny Grove | Visits: 4 | Rate: (no price)
+
+[VALENCIA SKY] - 2 variants
+  * Valencia Sky
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+  * Valencia Sky Main Entrance of the Common Area
+    Company: Down to Earth Landscaping | Visits: 0 | Rate: (no price)
+
+[VANDERBILT COMMONS] - 2 variants
+  * Vanderbilt Commons 1
+    Company: Renfroe & Jackson | Visits: 0 | Rate: (no price)
+  * Vanderbilt Commons Apartments
+    Company: Renfroe & Jackson | Visits: 0 | Rate: (no price)
+
+[VERANDAS 2] - 2 variants
+  * Verandas 2 @ Tiger Island
+    Company: Greenscapes | Visits: 1 | Rate: $86/mo
+  * Verandas 2 at Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[VERANDAS 2,3,4] - 2 variants
+  * Verandas 2,3,4 @ Treviso Bay
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verandas 2,3,4 at Treviso
+    Company: Greenscapes | Visits: 1 | Rate: $245/mo
+
+[VERANDAS I] - 2 variants
+  * Verandas I
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+  * Verandas I @ Southern Links
+    Company: Greenscapes | Visits: 2 | Rate: $97/mo
+
+[VERANDAS III] - 2 variants
+  * Verandas III @ Southern Links
+    Company: Greenscapes | Visits: 1 | Rate: $108/mo
+  * Verandas III at Southern Links
+    Company: Greenscapes | Visits: 0 | Rate: (no price)
+
+[VIA NAVONA] - 2 variants
+  * Via Navona
+    Company: All Green Landscape Management LLC | Visits: 2 | Rate: $630/mo
+  * Via Navona Way
+    Company: All Green Landscape Management LLC | Visits: 0 | Rate: (no price)
+
+[VILLAGES OF] - 2 variants
+  * Villages of Avalon
+    Company: Down to Earth Landscaping - Tampa | Visits: 0 | Rate: (no price)
+  * Villages of Monterey
+    Company: Keepin it Green | Visits: 2 | Rate: $252/mo
+
+[VINTAGE BAY] - 2 variants
+  * Vintage Bay
+    Company: Greenscapes | Visits: 3 | Rate: $180/mo
+  * Vintage Bay Dr
+    Company: Greenscapes | Visits: 0 | Rate: (no price)

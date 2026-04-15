@@ -1,0 +1,182 @@
+import { GuidelineEditor } from '@/components/GuidelineEditor';
+import { GovernanceGrid } from '@/components/GovernanceGrid';
+import { 
+  Settings, 
+  Shield, 
+  Package, 
+  Clock, 
+  Users, 
+  Building2, 
+  Lock, 
+  MessageSquareText, 
+  ShieldCheck 
+} from 'lucide-react';
+import { createServerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { EditProductModal } from '@/components/EditProductModal';
+import { LaborRateEditor } from '@/components/LaborRateEditor';
+import { CrewLeaderMerger } from '@/components/CrewLeaderMerger';
+import { CompanyMerger } from '@/components/CompanyMerger';
+import { MaterialCatalog } from '@/components/MaterialCatalog';
+import { IdentityManager } from '@/components/IdentityManager';
+
+export const dynamic = 'force-dynamic';
+
+export default async function SettingsPage() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    }
+  );
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Fetch profile with role permissions
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*, role:app_roles(*)')
+    .eq('id', session?.user.id)
+    .single();
+
+  const permissions = profile?.role || {};
+  const isPowerUser = permissions.can_manage_system;
+
+  const [{ data: products, error }, { data: settingsData }] = await Promise.all([
+    supabase.from('products').select('*').order('sku'),
+    supabase.from('app_settings').select('key, value'),
+  ]);
+  
+  if (error) console.error('Error fetching materials/products:', error);
+
+  const settingsMap = Object.fromEntries((settingsData || []).map((s: any) => [s.key, s.value]));
+  const laborRate = parseFloat(settingsMap['labor_rate_per_hour'] || '32.50');
+
+  return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="fade-up mb-8 flex justify-between items-start">
+        <div>
+          <div className="flex items-center gap-3">
+            <Settings size={28} className="text-zinc-900 dark:text-white" />
+            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+              System Settings
+            </h1>
+          </div>
+          <p className="text-zinc-500 text-sm mt-2">
+            {isPowerUser
+              ? 'Manage global configurations, pricing parameters, and system access levels.'
+              : 'You are in Standard View — certain system settings are restricted based on your role.'}
+          </p>
+        </div>
+        <div style={{ background: 'var(--surface-sunken)', padding: '12px 20px', borderRadius: 12, border: '1px solid var(--border)' }}>
+          <div style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Access Level</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <ShieldCheck size={14} className="text-zinc-500" />
+            <div style={{ fontSize: 13, fontWeight: 700 }}>{profile?.role?.name || 'Authorized Guest'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="fade-up fade-up-1 flex flex-col gap-6">
+        
+        {/* Core Settings: Labor Rate & Standard Guidelines (Sensitive) */}
+        {isPowerUser && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="card" style={{ padding: 20 }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Clock size={16} className="text-orange-500" />
+                  <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Financial Baseline</h2>
+                </div>
+                <LaborRateEditor currentRate={laborRate} />
+              </div>
+
+              <div className="card" style={{ padding: 20 }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <MessageSquareText size={16} className="text-blue-500" />
+                  <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Service Guidelines</h2>
+                </div>
+                <GuidelineEditor />
+              </div>
+            </div>
+
+            {/* Team & Access Control (Identity) */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 px-1">
+                <ShieldCheck size={20} className="text-zinc-600" />
+                <h2 className="text-xl font-bold tracking-tight">Team & Access Control</h2>
+              </div>
+              <IdentityManager />
+            </div>
+          </>
+        )}
+
+        {/* Catalog & Inventory (Semi-Sensitive) */}
+        {(isPowerUser || permissions.can_edit_pricing) && (
+          <div className="card shadow-sm" style={{ padding: 24 }}>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Package size={18} className="text-zinc-500" />
+                <h2 className="font-extrabold text-sm uppercase tracking-wider text-zinc-700">Material Catalog</h2>
+              </div>
+            </div>
+            <MaterialCatalog initialProducts={products || []} isEditable={permissions.can_edit_pricing} />
+          </div>
+        )}
+
+        {/* Data Governance & Merging (Highly Sensitive) */}
+        {isPowerUser && (
+          <div className="card bg-zinc-50/50 border-dashed" style={{ padding: 24 }}>
+            <div className="flex items-center gap-2 mb-6">
+              <Shield size={18} className="text-zinc-400" />
+              <h2 className="font-extrabold text-sm uppercase tracking-wider text-zinc-500">Data Governance & Normalization</h2>
+            </div>
+            
+            <div className="flex flex-col gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users size={16} className="text-zinc-600" />
+                    <h3 className="text-sm font-bold">Crew Registry Normalization</h3>
+                  </div>
+                  <CrewLeaderMerger />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Building2 size={16} className="text-zinc-600" />
+                    <h3 className="text-sm font-bold">Community Source Merger</h3>
+                  </div>
+                  <CompanyMerger />
+                </div>
+              </div>
+
+              <div className="border-t border-zinc-200 pt-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <ShieldCheck size={16} className="text-zinc-600" />
+                  <h3 className="text-sm font-bold">Bulk Normalization Grid</h3>
+                </div>
+                <GovernanceGrid />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!isPowerUser && !permissions.can_edit_pricing && (
+           <div className="card p-12 text-center" style={{ background: 'var(--surface-sunken)', border: '2px dashed var(--border)' }}>
+            <Lock size={40} className="mx-auto text-zinc-300 mb-4" />
+            <h2 className="text-xl font-bold">Settings Restricted</h2>
+            <p className="text-zinc-500 mt-2 max-w-md mx-auto">
+              Your current role ({profile?.role?.name || 'Standard'}) does not have permission to modify system parameters. 
+              Please contact an administrator if you need to adjust labor rates or material pricing.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

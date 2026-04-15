@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "pptx",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/pptx",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.329Z",
+  "contentHash": "a82b588963b4bfb283af803da2716fade93e2f2bf4804d1cf2d537753b8d556a",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "pptx",
+      "description": "Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.",
+      "license": "Proprietary. LICENSE.txt has complete terms"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "pptx",
+        "description": "Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill.",
+        "license": "Proprietary. LICENSE.txt has complete terms"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:37.466Z"
+}

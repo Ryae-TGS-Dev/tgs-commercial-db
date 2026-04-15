@@ -1,0 +1,406 @@
+{
+  "Artesia Village Homes": {
+    "monthly": 552,
+    "annual": 6624
+  },
+  "BTI": {
+    "monthly": 14262.67,
+    "annual": 171152.04
+  },
+  "Rick Hendrick Chevrolet": {
+    "monthly": 220,
+    "annual": 2640
+  },
+  "Vista Pointe Association & Coach Homes": {
+    "monthly": 730,
+    "annual": 8760
+  },
+  "Ave National": {
+    "monthly": 2273,
+    "annual": 27276
+  },
+  "Bridgetown at the Plantation": {
+    "monthly": 20264.5,
+    "annual": 243174
+  },
+  "Silverstone at the Quarry": {
+    "monthly": 392,
+    "annual": 4704
+  },
+  "Sonoma Oaks": {
+    "monthly": 1555,
+    "annual": 18660
+  },
+  "The Place": {
+    "monthly": 30548,
+    "annual": 366576
+  },
+  "Terra Walk": {
+    "monthly": 3987,
+    "annual": 47844
+  },
+  "Villas of Escalante": {
+    "monthly": 95,
+    "annual": 1140
+  },
+  "Wild Blue": {
+    "monthly": 22150,
+    "annual": 265800
+  },
+  "Bonita Isles": {
+    "monthly": 5200,
+    "annual": 62400
+  },
+  "Serena": {
+    "monthly": 425,
+    "annual": 5100
+  },
+  "Bonita National": {
+    "monthly": 375,
+    "annual": 4500
+  },
+  "Streamside": {
+    "monthly": 280,
+    "annual": 3360
+  },
+  "Esplanade Lake Club": {
+    "monthly": 11360,
+    "annual": 136320
+  },
+  "Fairway Oaks": {
+    "monthly": 322.08,
+    "annual": 3864.96
+  },
+  "Hilton Marco Beach Resort": {
+    "monthly": 125,
+    "annual": 1500
+  },
+  "The Crossings Orange Blossom": {
+    "monthly": 45,
+    "annual": 540
+  },
+  "The Enclave at Naples": {
+    "monthly": 675.1,
+    "annual": 8101.2
+  },
+  "Avow Treasures": {
+    "monthly": 50,
+    "annual": 600
+  },
+  "Fenhurst": {
+    "monthly": 1080,
+    "annual": 12960
+  },
+  "Pavillion Club": {
+    "monthly": 350,
+    "annual": 4200
+  },
+  "Springs at Coral Shores": {
+    "monthly": 280,
+    "annual": 3360
+  },
+  "herbicide and IPM,150,-,150,8,Nelson": {
+    "monthly": 159.96,
+    "annual": null
+  },
+  "The Place Phase 1": {
+    "monthly": 30548,
+    "annual": 366576
+  },
+  "Novo Gateway": {
+    "monthly": 3600,
+    "annual": 43200
+  },
+  "RiverCreek": {
+    "monthly": 1068.75,
+    "annual": 12825
+  },
+  "Amador": {
+    "monthly": 970,
+    "annual": 11640
+  },
+  "Verona Walk": {
+    "monthly": 31909.44,
+    "annual": 382913.28
+  },
+  "Amador Campanile Cir": {
+    "monthly": 970,
+    "annual": 11640
+  },
+  "Villas 3 in Bella Terra": {
+    "monthly": 2030,
+    "annual": 24360
+  },
+  "Sage Meadows": {
+    "monthly": 404,
+    "annual": 4848
+  },
+  "Terreno": {
+    "monthly": 6972,
+    "annual": 83664
+  },
+  "herbicide": {
+    "monthly": 150.00265,
+    "annual": 800
+  },
+  "Arbor Trace": {
+    "monthly": 999.25,
+    "annual": 11991
+  },
+  "Kinross": {
+    "monthly": 1550,
+    "annual": 18600
+  },
+  "Westbrook": {
+    "monthly": 4982.75,
+    "annual": 59793
+  },
+  "Cypress Hammock": {
+    "monthly": 704,
+    "annual": 8448
+  },
+  "Marsilea": {
+    "monthly": 324,
+    "annual": 3888
+  },
+  "Hampton Park": {
+    "monthly": 7400,
+    "annual": 88800
+  },
+  "Stoneybrook HOA Commons": {
+    "monthly": 2355.51,
+    "annual": 28266.12
+  },
+  "Hampton Inn": {
+    "monthly": 100,
+    "annual": 1200
+  },
+  "Kalea Bay": {
+    "monthly": 4020,
+    "annual": 48240
+  },
+  "Manatee Cove": {
+    "monthly": 3232,
+    "annual": 38784
+  },
+  "Springs at Cape Coral": {
+    "monthly": 424,
+    "annual": 5088
+  },
+  "Gulf Landing": {
+    "monthly": 1337.5,
+    "annual": 16050
+  },
+  "Meadows of Estero": {
+    "monthly": 2641,
+    "annual": 31692
+  },
+  "The Carlisle Naples": {
+    "monthly": 620,
+    "annual": 7440
+  },
+  "Verdana Village": {
+    "monthly": 34513.33,
+    "annual": 414159.96
+  },
+  "Paloma": {
+    "monthly": 3437.92,
+    "annual": 41255.04
+  },
+  "Cascades": {
+    "monthly": 6166.67,
+    "annual": 74000.04
+  },
+  "Carena": {
+    "monthly": 3570.5,
+    "annual": 42846
+  },
+  "Carlos": {
+    "monthly": 320,
+    "annual": null
+  },
+  "Verdana": {
+    "monthly": 34513.33,
+    "annual": 414159.96
+  },
+  "Runaway": {
+    "monthly": 3283,
+    "annual": 39396
+  },
+  "Stoneybrook": {
+    "monthly": 2355.51,
+    "annual": 28266.12
+  },
+  "Village School": {
+    "monthly": 1275,
+    "annual": null
+  },
+  "Royal Palm Academy": {
+    "monthly": 400,
+    "annual": 4800
+  },
+  "Bonita Lakes": {
+    "monthly": 5954,
+    "annual": 71448
+  },
+  "Silver Oaks HOA": {
+    "monthly": 400,
+    "annual": 4800
+  },
+  "The Glades Section 10": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "The Glades Section 5": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "The Glades Section 6": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "The Glades Section 7": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "The Glades Section 9": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "Runaway Dr": {
+    "monthly": 3283,
+    "annual": 39396
+  },
+  "Wild Blue Common Area": {
+    "monthly": 22150,
+    "annual": 265800
+  },
+  "Coach Homes 2 at Treviso Bay": {
+    "monthly": 322.9,
+    "annual": 3874.8
+  },
+  "Royal Marco Pointe I": {
+    "monthly": 120,
+    "annual": 1440
+  },
+  "Terrace 3 at Treviso Bay": {
+    "monthly": 70.7,
+    "annual": 848.4
+  },
+  "Terrace 4 at Treviso Bay": {
+    "monthly": 70.5,
+    "annual": 846
+  },
+  "Terrace 5 at Treviso Bay": {
+    "monthly": 57.42,
+    "annual": 689.04
+  },
+  "Terrace 6 at Treviso Bay": {
+    "monthly": 52.9,
+    "annual": 634.8
+  },
+  "Terrace 8 & 9 at Treviso Bay": {
+    "monthly": 118.39,
+    "annual": 1420.68
+  },
+  "Veranda 1 Venezia": {
+    "monthly": 158.64,
+    "annual": 1903.68
+  },
+  "Verandas 2, 3, 4 at Treviso Bay": {
+    "monthly": 257.7,
+    "annual": 3092.4
+  },
+  "Mystique at Pelican Bay": {
+    "monthly": 132.08,
+    "annual": 1584.96
+  },
+  "North Park Isle": {
+    "monthly": 2391.55,
+    "annual": 28698.6
+  },
+  "Naples Sunrise III": {
+    "monthly": 289.02,
+    "annual": 3468.24
+  },
+  "The Glades Section 4": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "Claridge": {
+    "monthly": 125,
+    "annual": 1500
+  },
+  "The Landings": {
+    "monthly": 539.92,
+    "annual": 6479.04
+  },
+  "BTI Common Area": {
+    "monthly": 14262.67,
+    "annual": 171152.04
+  },
+  "Kinsale Golf Course": {
+    "monthly": 350,
+    "annual": 4200
+  },
+  "Timarron Way": {
+    "monthly": 980,
+    "annual": 11760
+  },
+  "Verdana Common Area": {
+    "monthly": 34513.33,
+    "annual": 414159.96
+  },
+  "Solemar in Grandezza": {
+    "monthly": 390,
+    "annual": 4680
+  },
+  "Village Centre Townhomes": {
+    "monthly": 251.81,
+    "annual": 3021.72
+  },
+  "Willowgreen": {
+    "monthly": 200,
+    "annual": 2400
+  },
+  "Palm Garden": {
+    "monthly": 152.65,
+    "annual": 1831.8
+  },
+  "The Glades Section 1 and 2": {
+    "monthly": 7700.17,
+    "annual": 92402.04
+  },
+  "Bonita Lakes Common Area": {
+    "monthly": 5954,
+    "annual": 71448
+  },
+  "Whispering Lakes": {
+    "monthly": 1990,
+    "annual": 23880
+  },
+  "Carlton Lake Villas": {
+    "monthly": 842,
+    "annual": 10104
+  },
+  "Carlton Lakes HOA": {
+    "monthly": 728.59,
+    "annual": 8743.08
+  },
+  "Waverly Greens": {
+    "monthly": 785.84,
+    "annual": 9430.08
+  },
+  "Carlton Lake Master": {
+    "monthly": 590,
+    "annual": 7080
+  },
+  "Tampa City Center": {
+    "monthly": 116.17,
+    "annual": 1394.04
+  },
+  "St Marissa": {
+    "monthly": 50,
+    "annual": 600
+  }
+}

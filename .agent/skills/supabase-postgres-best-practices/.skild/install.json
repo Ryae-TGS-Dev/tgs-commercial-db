@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "name": "supabase-postgres-best-practices",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices",
+  "sourceType": "github-url",
+  "installedAt": "2026-04-02T16:26:55.689Z",
+  "contentHash": "3c6f15ee65118ca5fe7267c88945a849198f913d02b1a0b62402bc5278aaa1a3",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "supabase-postgres-best-practices",
+      "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.",
+      "license": "MIT",
+      "metadata": {
+        "author": "supabase",
+        "version": "1.1.0",
+        "organization": "Supabase",
+        "date": "January 2026",
+        "abstract": "Comprehensive Postgres performance optimization guide for developers using Supabase and Postgres. Contains performance rules across 8 categories, prioritized by impact from critical (query performance, connection management) to incremental (advanced features). Each rule includes detailed explanations, incorrect vs. correct SQL examples, query plan analysis, and specific performance metrics to guide automated optimization and code generation."
+      }
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "supabase-postgres-best-practices",
+        "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.",
+        "license": "MIT",
+        "metadata": {
+          "author": "supabase",
+          "version": "1.1.0",
+          "organization": "Supabase",
+          "date": "January 2026",
+          "abstract": "Comprehensive Postgres performance optimization guide for developers using Supabase and Postgres. Contains performance rules across 8 categories, prioritized by impact from critical (query performance, connection management) to incremental (advanced features). Each rule includes detailed explanations, incorrect vs. correct SQL examples, query plan analysis, and specific performance metrics to guide automated optimization and code generation."
+        }
+      }
+    }
+  }
+}

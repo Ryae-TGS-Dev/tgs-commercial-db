@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "canvas-design",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/canvas-design",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.510Z",
+  "contentHash": "eb4d2607199562e691b6016be859c3e1f07ed6ba9d0a02bf4db3d6d9ea260aea",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "canvas-design",
+      "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "canvas-design",
+        "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:19.745Z"
+}

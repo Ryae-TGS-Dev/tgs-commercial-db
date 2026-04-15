@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "name": "react-best-practices",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices",
+  "sourceType": "github-url",
+  "installedAt": "2026-04-02T16:28:52.875Z",
+  "contentHash": "1d0476da61b94aa80b43860f88ea8f9c01095fced82eca88e6011e7c1bb8ea42",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "vercel-react-best-practices",
+      "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+      "license": "MIT",
+      "metadata": {
+        "author": "vercel",
+        "version": "1.0.0"
+      }
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "vercel-react-best-practices",
+        "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+        "license": "MIT",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}

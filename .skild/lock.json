@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-04-02T16:30:59.392Z",
+  "entries": {
+    "pdf": {
+      "name": "pdf",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/pdf",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:37.461Z",
+      "contentHash": "ba5a748c5907bc8e49766ae26c928262fadaf46ffd6bcc59f6228c4de7e33983"
+    },
+    "xlsx": {
+      "name": "xlsx",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/xlsx",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:44:23.224Z",
+      "contentHash": "a752efc3bf18adc1bd906d77d591202213962920fcd495293877b460cb7d2c72"
+    },
+    "webapp-testing": {
+      "name": "webapp-testing",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/webapp-testing",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:44:23.234Z",
+      "contentHash": "42af1c0577d9623745bfad76148ab36354d7175e5fd92692d22a01cd3f76c70b"
+    },
+    "web-artifacts-builder": {
+      "name": "web-artifacts-builder",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/web-artifacts-builder",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:44:23.242Z",
+      "contentHash": "e80569cf506c866de3c86ffab023b10aa406b41bd72623a3cb1f35487ec3084d"
+    },
+    "theme-factory": {
+      "name": "theme-factory",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/theme-factory",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:48.580Z",
+      "contentHash": "2d4e7a712387b30192041a3a73f60742f843e77d4520c858cb6a6b56aa9c742a"
+    },
+    "slack-gif-creator": {
+      "name": "slack-gif-creator",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/slack-gif-creator",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:43.918Z",
+      "contentHash": "46bde01eb1cffbe7bc5d6718bed618d3248a065016a03789cf9cc55f21523167"
+    },
+    "skill-creator": {
+      "name": "skill-creator",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/skill-creator",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:41.766Z",
+      "contentHash": "261b8598283a7b69dc0f64f140c998ed7e29a546c2689619ce6eb4cfe2db1efb"
+    },
+    "pptx": {
+      "name": "pptx",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/pptx",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:39.727Z",
+      "contentHash": "a82b588963b4bfb283af803da2716fade93e2f2bf4804d1cf2d537753b8d556a"
+    },
+    "mcp-builder": {
+      "name": "mcp-builder",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/mcp-builder",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:35.311Z",
+      "contentHash": "b22aaf3efad4468d2b494618149a59433d26b4f19c3d162e9768a5430e345e70"
+    },
+    "internal-comms": {
+      "name": "internal-comms",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/internal-comms",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:33.115Z",
+      "contentHash": "8562641c42f888d6f6ac34a34178eff1483c1e534979606420e5fba2a5fca874"
+    },
+    "frontend-design": {
+      "name": "frontend-design",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/frontend-design",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:30.934Z",
+      "contentHash": "2d7213d7574d5be4e90bff599a26be985b88058b9328a1751358ae9e15bfc53e"
+    },
+    "docx": {
+      "name": "docx",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/docx",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:28.816Z",
+      "contentHash": "df92ff8d87ed72e4b6e444606b4ffc9a2a64a255b378f9a5ef107b604f1fc6dd"
+    },
+    "doc-coauthoring": {
+      "name": "doc-coauthoring",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/doc-coauthoring",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:26.315Z",
+      "contentHash": "08286b50480ba68dc6f85a9fc635ab8761af7b78588a117d9f08735c35fbf82f"
+    },
+    "claude-api": {
+      "name": "claude-api",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/claude-api",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:24.123Z",
+      "contentHash": "3bbf9239e8e57c6bf2ca8d1afbe6de926d6aa750ffb51c662dd63987b9bbaf5d"
+    },
+    "canvas-design": {
+      "name": "canvas-design",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/canvas-design",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:22.056Z",
+      "contentHash": "eb4d2607199562e691b6016be859c3e1f07ed6ba9d0a02bf4db3d6d9ea260aea"
+    },
+    "brand-guidelines": {
+      "name": "brand-guidelines",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/brand-guidelines",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:19.743Z",
+      "contentHash": "abb30618bd6c3fb5cf445cb9188e5288139e78f0215bd1c696dda85c4bf059c3"
+    },
+    "algorithmic-art": {
+      "name": "algorithmic-art",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/skills/algorithmic-art",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:16.776Z",
+      "contentHash": "f4a04877af1391b310d4d770ff1ab99ffc62b323dad810b9a7fdbeaf0a0fcdd5"
+    },
+    "template": {
+      "name": "template",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "anthropics/skills/template",
+      "sourceType": "degit-shorthand",
+      "installedAt": "2026-04-02T15:46:46.477Z",
+      "contentHash": "42257636b2945d8f14c4940f06a81e2c703844124f576733ecf8f2dce14ebb3c"
+    },
+    "supabase-postgres-best-practices": {
+      "name": "supabase-postgres-best-practices",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices",
+      "sourceType": "github-url",
+      "installedAt": "2026-04-02T16:26:55.689Z",
+      "contentHash": "3c6f15ee65118ca5fe7267c88945a849198f913d02b1a0b62402bc5278aaa1a3"
+    },
+    "postgresql": {
+      "name": "postgresql",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "https://github.com/wshobson/agents/tree/main/plugins/database-design/skills/postgresql",
+      "sourceType": "github-url",
+      "installedAt": "2026-04-02T16:28:18.998Z",
+      "contentHash": "f5c8dc2a15d532bffdd1034190f2c1a69cebbec833da6307a3e4bb40ec84fd11"
+    },
+    "react-best-practices": {
+      "name": "react-best-practices",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices",
+      "sourceType": "github-url",
+      "installedAt": "2026-04-02T16:28:52.875Z",
+      "contentHash": "1d0476da61b94aa80b43860f88ea8f9c01095fced82eca88e6011e7c1bb8ea42"
+    },
+    "composition-patterns": {
+      "name": "composition-patterns",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "https://github.com/vercel-labs/agent-skills/tree/main/skills/composition-patterns",
+      "sourceType": "github-url",
+      "installedAt": "2026-04-02T16:30:47.060Z",
+      "contentHash": "8e17e38e12949687fbf955821751bc961a2d80bdca2f8cf546ce918cc6511d4b"
+    },
+    "subagent-driven-development": {
+      "name": "subagent-driven-development",
+      "platform": "antigravity",
+      "scope": "project",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/subagent-driven-development",
+      "sourceType": "github-url",
+      "installedAt": "2026-04-02T16:30:59.391Z",
+      "contentHash": "5f3ede03b3c711459ce9af9e02074b9595fe4ec3d8c108ffa320752431c75c35"
+    }
+  }
+}

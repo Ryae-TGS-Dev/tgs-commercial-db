@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "skill-creator",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/skill-creator",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.283Z",
+  "contentHash": "261b8598283a7b69dc0f64f140c998ed7e29a546c2689619ce6eb4cfe2db1efb",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "skill-creator",
+      "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "skill-creator",
+        "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy."
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:39.731Z"
+}

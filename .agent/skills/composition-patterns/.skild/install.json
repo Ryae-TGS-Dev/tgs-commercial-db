@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "name": "composition-patterns",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "https://github.com/vercel-labs/agent-skills/tree/main/skills/composition-patterns",
+  "sourceType": "github-url",
+  "installedAt": "2026-04-02T16:30:47.060Z",
+  "contentHash": "8e17e38e12949687fbf955821751bc961a2d80bdca2f8cf546ce918cc6511d4b",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "vercel-composition-patterns",
+      "description": "React composition patterns that scale. Use when refactoring components with boolean prop proliferation, building flexible component libraries, or designing reusable APIs. Triggers on tasks involving compound components, render props, context providers, or component architecture. Includes React 19 API changes.",
+      "license": "MIT",
+      "metadata": {
+        "author": "vercel",
+        "version": "1.0.0"
+      }
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "vercel-composition-patterns",
+        "description": "React composition patterns that scale. Use when refactoring components with boolean prop proliferation, building flexible component libraries, or designing reusable APIs. Triggers on tasks involving compound components, render props, context providers, or component architecture. Includes React 19 API changes.",
+        "license": "MIT",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}

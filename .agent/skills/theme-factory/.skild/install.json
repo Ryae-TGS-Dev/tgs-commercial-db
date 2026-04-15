@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "theme-factory",
+  "platform": "antigravity",
+  "scope": "project",
+  "source": "anthropics/skills/skills/theme-factory",
+  "sourceType": "degit-shorthand",
+  "installedAt": "2026-04-02T15:44:23.256Z",
+  "contentHash": "2d4e7a712387b30192041a3a73f60742f843e77d4520c858cb6a6b56aa9c742a",
+  "hasSkillMd": true,
+  "skill": {
+    "frontmatter": {
+      "name": "theme-factory",
+      "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
+      "license": "Complete terms in LICENSE.txt"
+    },
+    "validation": {
+      "ok": true,
+      "issues": [],
+      "frontmatter": {
+        "name": "theme-factory",
+        "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
+        "license": "Complete terms in LICENSE.txt"
+      }
+    }
+  },
+  "updatedAt": "2026-04-02T15:46:46.480Z"
+}
