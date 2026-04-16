@@ -890,16 +890,34 @@ function AccessDenied() {
 }
 
 export default function LogPage() {
-  const [isPowerUser, setIsPowerUser] = useState<boolean | null>(null);
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setIsPowerUser(document.cookie.includes('tgs_role=power_user'));
+    const checkAccess = async () => {
+      // 1. Check for legacy cookie
+      const isPowerUser = document.cookie.includes('tgs_role=power_user');
+      if (isPowerUser) {
+        setHasAccess(true);
+        return;
+      }
+
+      // 2. Fallback: Check actual Supabase session (Admin bypass)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email === 'tgssales.ryae@gmail.com') {
+        setHasAccess(true);
+        return;
+      }
+
+      setHasAccess(false);
+    };
+
+    checkAccess();
   }, []);
 
-  // Loading state — avoid flash of form before cookie is read
-  if (isPowerUser === null) return null;
+  // Loading state — avoid flash of form before access is verified
+  if (hasAccess === null) return null;
 
-  if (!isPowerUser) return <AccessDenied />;
+  if (!hasAccess) return <AccessDenied />;
 
   return (
     <div style={{ padding: '40px 48px', maxWidth: 1600, margin: '0 auto' }}>
