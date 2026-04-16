@@ -1,4 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -10,20 +11,15 @@ import {
   Leaf,
   ClipboardList,
   Target,
-  Maximize
+  Maximize,
+  PenLine
 } from 'lucide-react';
 import { EditCommunityModal } from '@/components/EditCommunityModal';
 import { EditLogModal } from '@/components/EditLogModal';
-import { cookies } from 'next/headers';
 import { CrewLeaderDisplay } from '@/components/CrewLeaderDisplay';
 import { ServiceDisplay } from '@/components/ServiceDisplay';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-async function getCommunityData(id: string) {
+async function getCommunityData(id: string, supabase: any) {
   const [commRes, historyRes, settingsRes] = await Promise.all([
     supabase.from('communities').select('*').eq('id', id).single(),
     supabase
@@ -61,10 +57,30 @@ async function getCommunityData(id: string) {
 export default async function CommunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const cookieStore = await cookies();
-  const role = cookieStore.get('tgs_role')?.value;
-  const isPowerUser = role === 'power_user';
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    }
+  );
 
-  const { community, history, productUsage, contract, laborRate } = await getCommunityData(id);
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Fetch profile with role permissions
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*, role:app_roles(*)')
+    .eq('id', session?.user.id)
+    .single();
+
+  const isPowerUser = profile?.role?.can_manage_system || false;
+
+  const { community, history, productUsage, contract, laborRate } = await getCommunityData(id, supabase);
   if (!community) notFound();
 
   const historyWithMaterials = history.map((h: any) => {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useUser } from '@/hooks/useUser';
 import {
   Search,
   ChevronDown,
@@ -890,32 +891,12 @@ function AccessDenied() {
 }
 
 export default function LogPage() {
-  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+  const { profile, loading: userLoading } = useUser();
 
-  useEffect(() => {
-    const checkAccess = async () => {
-      // 1. Check for legacy cookie
-      const isPowerUser = document.cookie.includes('tgs_role=power_user');
-      if (isPowerUser) {
-        setHasAccess(true);
-        return;
-      }
-
-      // 2. Fallback: Check actual Supabase session (Admin bypass)
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user?.email === 'tgssales.ryae@gmail.com') {
-        setHasAccess(true);
-        return;
-      }
-
-      setHasAccess(false);
-    };
-
-    checkAccess();
-  }, []);
+  const hasAccess = profile?.role?.can_log_service || profile?.role?.can_manage_system;
 
   // Loading state — avoid flash of form before access is verified
-  if (hasAccess === null) return null;
+  if (userLoading) return null;
 
   if (!hasAccess) return <AccessDenied />;
 

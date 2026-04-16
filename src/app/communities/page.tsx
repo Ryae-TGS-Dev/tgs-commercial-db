@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Search, Building2, ArrowRight, X, ChevronDown, CheckSquare, Combine, Target, Maximize } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useUser } from '@/hooks/useUser';
 import { CommunityDrawer } from '@/components/CommunityDrawer';
 
 export default function CommunitiesPage() {
@@ -15,7 +16,8 @@ export default function CommunitiesPage() {
   const [total, setTotal] = useState(0);
   const PAGE = 200;
   const [from, setFrom] = useState(0);
-  const [isPowerUser, setIsPowerUser] = useState(false);
+  const { profile } = useUser();
+  const isPowerUser = profile?.role?.can_manage_system || false;
   const [selected, setSelected] = useState<string[]>([]);
   const [merging, setMerging] = useState(false);
   const [primaryId, setPrimaryId] = useState('');
@@ -70,9 +72,7 @@ export default function CommunitiesPage() {
 
   useEffect(() => { fetchCompanies(); }, [fetchCompanies]);
 
-  useEffect(() => {
-    setIsPowerUser(document.cookie.includes('tgs_role=power_user'));
-  }, []);
+  useEffect(() => { fetchCompanies(); }, [fetchCompanies]);
 
   const handleMerge = async () => {
     if (!primaryId || selected.length < 2) return;
