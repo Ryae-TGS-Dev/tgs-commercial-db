@@ -14,6 +14,8 @@ import {
   AlertCircle,
   Loader2,
   Users,
+  PenLine,
+  Activity,
 } from 'lucide-react';
 
 // Dynamically fetched below
@@ -120,6 +122,7 @@ function LogForm() {
   });
 
   const [products, setProducts] = useState<any[]>([]);
+  const [laborRate, setLaborRate] = useState(32.50);
   const [materialSearch, setMaterialSearch] = useState('');
   const [showMaterialSuggestions, setShowMaterialSuggestions] = useState(false);
 
@@ -128,7 +131,7 @@ function LogForm() {
     const loadData = async () => {
       const [{ data: crewData }, { data: settingsData }, { data: productData }] = await Promise.all([
         supabase.from('crew_leaders').select('name').order('name'),
-        supabase.from('app_settings').select('key, value').in('key', ['guideline_service_performed', 'guideline_crew_name']),
+        supabase.from('app_settings').select('key, value').in('key', ['guideline_service_performed', 'guideline_crew_name', 'labor_rate_per_hour']),
         supabase.from('products').select('*').order('sku')
       ]);
 
@@ -138,6 +141,9 @@ function LogForm() {
           service: map['guideline_service_performed'] || uiGuidelines.service,
           crew: map['guideline_crew_name'] || uiGuidelines.crew
         });
+        if (map['labor_rate_per_hour']) {
+          setLaborRate(parseFloat(map['labor_rate_per_hour']));
+        }
       }
 
       if (crewData) {
@@ -252,6 +258,13 @@ function LogForm() {
       await supabase.from('crew_leaders').upsert({ name: crewLeader, is_active: true }, { onConflict: 'name' });
     }
 
+    // Fetch current community price to snapshot
+    let currentContractPrice = 0;
+    if (!isNewCommunity && finalCommunityId) {
+      const { data: comm } = await supabase.from('communities').select('total_monthly_price').eq('id', finalCommunityId).single();
+      currentContractPrice = comm?.total_monthly_price || 0;
+    }
+
     const serviceEntry = {
       community_id: finalCommunityId,
       source_community_name: communitySearch,
@@ -270,6 +283,9 @@ function LogForm() {
           ? 'One Time Service'
           : 'Contract Maintenance',
       total_lawn_material_cost: totalMaterialCost,
+      // FORENSIC SNAPSHOTS
+      applied_labor_rate: laborRate,
+      applied_contract_value: currentContractPrice
     };
 
     const { data: inserted, error } = await supabase
@@ -286,11 +302,15 @@ function LogForm() {
 
     const usageRows = Object.entries(bags)
       .filter(([, qty]) => qty > 0)
-      .map(([id, qty]) => ({
-        service_id: inserted.id,
-        product_id: id,
-        quantity_used: qty,
-      }));
+      .map(([id, qty]) => {
+        const product = products.find(p => p.id === id);
+        return {
+          service_id: inserted.id,
+          product_id: id,
+          quantity_used: qty,
+          applied_unit_price: parseFloat(product?.unit_price) || 0 // Snapshot material price
+        };
+      });
 
     if (usageRows.length > 0) {
       await supabase.from('service_product_usage').insert(usageRows);
@@ -539,29 +559,6 @@ function LogForm() {
                     + Add
                   </button>
                 </div>
-                {showMemberSuggestions && memberInput.length >= 1 && (() => {
-                  const matches = knownMembers
-                    .filter(m => m.toLowerCase().includes(memberInput.toLowerCase()) && !crewMembers.includes(m) && m !== crewLeader)
-                    .slice(0, 6);
-                  return matches.length > 0 ? (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, marginTop: 4, zIndex: 50, overflow: 'hidden' }}>
-                      {matches.map(m => (
-                        <button key={m} type="button"
-                          onMouseDown={() => {
-                            if (!crewMembers.includes(m)) {
-                              setCrewMembers(prev => [...prev, m]);
-                              setCrewCount(String((crewLeader ? 1 : 0) + crewMembers.length + 1));
-                            }
-                            setMemberInput('');
-                            setShowMemberSuggestions(false);
-                          }}
-                          style={{ display: 'block', width: '100%', padding: '8px 14px', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--text)' }}>
-                          {m}
-                        </button>
-                      ))}
-                    </div>
-                  ) : null;
-                })()}
               </div>
 
               {/* Member tags */}
@@ -905,16 +902,20 @@ export default function LogPage() {
   if (!isPowerUser) return <AccessDenied />;
 
   return (
-    <div style={{ padding: '40px 48px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ padding: '40px 48px', maxWidth: 1600, margin: '0 auto' }}>
+      {/* Header - Unified Styling */}
       <div className="fade-up" style={{ marginBottom: 32 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
-          Field Entry
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+           <div style={{ background: '#18181b', padding: 8, borderRadius: 10, color: 'white' }}>
+             <Activity size={18} />
+           </div>
+           <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Record Service</h1>
         </div>
-        <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>Record Service</h1>
-        <p style={{ color: 'var(--text-muted)', marginTop: 6, fontSize: 14 }}>
-          Record today&apos;s field work. Product counts auto-calculate material costs.
+        <p style={{ color: 'var(--text-muted)', marginTop: 8, fontSize: 14, fontWeight: 500 }}>
+          Record today's field work. Product counts auto-calculate material costs.
         </p>
       </div>
+
       <div className="fade-up fade-up-1 card" style={{ padding: 32 }}>
         <Suspense fallback={
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 400, gap: 12 }}>

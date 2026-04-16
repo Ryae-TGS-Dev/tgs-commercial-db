@@ -3,15 +3,12 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
 import { X, Save, Shield, Package } from 'lucide-react';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { useData } from '@/context/DataContext';
+import { supabase } from '@/lib/supabase';
 
 export function EditProductModal({ product }: { product: any }) {
+  const { refreshData, patchProduct, masterCategories, masterUnits } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,11 +18,20 @@ export function EditProductModal({ product }: { product: any }) {
     sku: product?.sku || '',
     unit_price: product?.unit_price || 0,
     coverage_sqft: product?.coverage_sqft || 0,
+    unit: product?.unit || 'BAG',
+    category: product?.category || 'Standard',
   });
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // UX-3: Reset form when modal opens for "Add Material" case
+  useEffect(() => {
+    if (isOpen && !product) {
+      setFormData({ sku: '', unit_price: 0, coverage_sqft: 0, unit: 'BAG', category: 'Standard' });
+    }
+  }, [isOpen, product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,33 +40,40 @@ export function EditProductModal({ product }: { product: any }) {
   const handleSave = async () => {
     setIsLoading(true);
     try {
+      const price = parseFloat(formData.unit_price.toString());
+      const coverage = parseFloat(formData.coverage_sqft.toString());
+      
+      const payload = {
+        sku: formData.sku,
+        unit_price: isNaN(price) ? 0 : price,
+        coverage_sqft: isNaN(coverage) ? 0 : coverage,
+        unit: (formData.unit || 'BAG').toUpperCase(),
+        category: formData.category || 'Standard',
+      };
+
       if (product) {
         // UPDATE
         const { error } = await supabase
           .from('products')
-          .update({
-            sku: formData.sku,
-            unit_price: parseFloat(formData.unit_price.toString()),
-            coverage_sqft: parseFloat(formData.coverage_sqft.toString()),
-          })
+          .update(payload)
           .eq('id', product.id);
         if (error) throw error;
+        await patchProduct(product.id, payload);
       } else {
         // INSERT
-        const { error } = await supabase
+        const { error, data } = await supabase
           .from('products')
-          .insert([{
-            sku: formData.sku,
-            unit_price: parseFloat(formData.unit_price.toString()),
-            coverage_sqft: parseFloat(formData.coverage_sqft.toString()),
-          }]);
+          .insert([payload])
+          .select();
         if (error) throw error;
+        if (data?.[0]) await patchProduct(data[0].id, data[0]);
       }
+      
       setIsOpen(false);
       router.refresh();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to save material.');
+      alert(`Failed to save material: ${err.message || 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -88,8 +101,32 @@ export function EditProductModal({ product }: { product: any }) {
             <input type="text" name="sku" className="input" value={formData.sku} onChange={handleChange} placeholder="e.g. 16-0-8 Fertilizer" />
           </div>
           <div>
-            <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Unit Price ($)</label>
-            <input type="number" name="unit_price" className="input" value={formData.unit_price} onChange={handleChange} />
+            <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Category</label>
+            <select 
+              name="category" 
+              className="input bg-white cursor-pointer" 
+              value={formData.category} 
+              onChange={(e: any) => setFormData({ ...formData, category: e.target.value })}
+            >
+              {masterCategories.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Unit Price ($)</label>
+              <input type="number" name="unit_price" className="input" value={formData.unit_price} onChange={handleChange} />
+            </div>
+            <div>
+              <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Unit Type</label>
+              <select 
+                name="unit" 
+                className="input bg-white cursor-pointer" 
+                value={formData.unit} 
+                onChange={(e: any) => setFormData({ ...formData, unit: e.target.value })}
+              >
+                {masterUnits.map(u => <option key={u} value={u}>{u}</option>)}
+              </select>
+            </div>
           </div>
           <div>
             <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Coverage (Square Footage)</label>

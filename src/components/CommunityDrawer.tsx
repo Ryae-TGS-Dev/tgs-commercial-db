@@ -51,7 +51,8 @@ export function CommunityDrawer({
           name: cData.name,
           company: cData.company,
           status: cData.status,
-          total_monthly_price: cData.total_monthly_price
+          total_monthly_price: cData.total_monthly_price,
+          square_footage: cData.square_footage
         });
       }
 
@@ -85,7 +86,8 @@ export function CommunityDrawer({
         .update({
           name: formData.name,
           company: formData.company,
-          total_monthly_price: parseFloat(formData.total_monthly_price)
+          total_monthly_price: parseFloat(formData.total_monthly_price),
+          square_footage: parseFloat(formData.square_footage)
         })
         .eq('id', communityId);
 
@@ -138,10 +140,30 @@ export function CommunityDrawer({
             </div>
           ) : (
             <>
+              {/* Hero Stats */}
+              {!loading && community && (
+                <div className="grid grid-cols-2 gap-4 mb-2">
+                  <div className="bg-zinc-50 dark:bg-zinc-800/50 p-6 rounded-[24px] border border-zinc-100 dark:border-zinc-800">
+                    <div className="text-[9px] font-black text-zinc-400 uppercase tracking-widest mb-2">Community Area</div>
+                    <div className="text-2xl font-black tracking-tighter text-zinc-900 dark:text-white">
+                      {(community.square_footage || 0).toLocaleString()}
+                      <span className="text-[10px] ml-1 text-zinc-400">SQFT</span>
+                    </div>
+                  </div>
+                  <div className="bg-zinc-50 dark:bg-zinc-800/50 p-6 rounded-[24px] border border-zinc-100 dark:border-zinc-800">
+                    <div className="text-[9px] font-black text-zinc-400 uppercase tracking-widest mb-2">Application Efficiency</div>
+                    <div className="text-2xl font-black tracking-tighter text-zinc-900 dark:text-white" style={{ color: community.status !== 'Active' ? '#94a3b8' : (!community.square_footage || community.square_footage === 0) ? '#f59e0b' : '#10b981' }}>
+                      {/* Note: Simplified precision for the drawer view */}
+                      {community.status !== 'Active' ? 'Unmapped' : (!community.square_footage || community.square_footage === 0) ? 'Awaiting Metrics' : 'Optimized'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Details & Edit Section */}
               <section>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Community Profile</h3>
+                  <h3 className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest italic">Client Profile</h3>
                   {!isEditing && (
                     <button onClick={() => setIsEditing(true)} className="text-xs font-semibold text-zinc-600 hover:text-zinc-900 flex items-center gap-1">
                       <Edit2 size={12} /> Edit
@@ -170,6 +192,15 @@ export function CommunityDrawer({
                       />
                     </div>
                     <div>
+                      <label className="block text-xs font-bold text-zinc-500 mb-1">Square Footage</label>
+                      <input 
+                        type="number" 
+                        value={formData.square_footage} 
+                        onChange={e => setFormData({...formData, square_footage: e.target.value})}
+                        className="input w-full text-sm py-1.5"
+                      />
+                    </div>
+                    <div>
                       <label className="block text-xs font-bold text-zinc-500 mb-1">Monthly Contract Price ($)</label>
                       <input 
                         type="number" 
@@ -190,12 +221,12 @@ export function CommunityDrawer({
                 ) : (
                   <div className="flex flex-col gap-3">
                     <div>
-                      <div className="text-xs font-bold text-zinc-400">Company / Manager</div>
+                      <div className="text-xs font-bold text-zinc-400">Company</div>
                       <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{community.company || '—'}</div>
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-zinc-400">Monthly Value</div>
-                      <div className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-100">${parseFloat(community.total_monthly_price || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+                      <div className="text-xs font-bold text-zinc-400">Monthly Contract</div>
+                      <div className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-100">${parseFloat(community.total_monthly_price || 0).toLocaleString('en-US', {minimumFractionDigits: 2})} / MO</div>
                     </div>
                   </div>
                 )}

@@ -9,6 +9,7 @@ import {
   Building2,
   ClipboardList,
   BarChart3,
+  TrendingUp,
   Package,
   LogOut,
   Settings,
@@ -18,8 +19,8 @@ import {
 import { useData } from "@/context/DataContext";
 
 const NAV = [
-  { href: "/dashboard", icon: BarChart3, label: "Dashboard", permission: 'can_view_financials' },
-  { href: "/", icon: LayoutGrid, label: "Overview", permission: 'can_view_dashboard' },
+  { href: "/", icon: LayoutGrid, label: "Home", permission: 'can_view_dashboard' },
+  { href: "/analytics", icon: TrendingUp, label: "Analytics", permission: 'can_view_financials' },
   { href: "/communities", icon: Building2, label: "Community Portfolio", permission: 'can_view_dashboard' },
   { href: "/inventory", icon: Package, label: "Materials & Labor", permission: 'can_view_dashboard' },
   { href: "/reports", icon: ClipboardList, label: "Reports", permission: 'can_view_dashboard' },

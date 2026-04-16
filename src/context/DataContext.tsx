@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 
 type DataContextType = {
@@ -9,9 +9,14 @@ type DataContextType = {
   services: any[];
   products: any[];
   laborRate: number;
+  efficiencyTarget: number;
+  masterCategories: string[];
+  masterUnits: string[];
   lastRefreshed: number | null;
   refreshData: () => Promise<void>;
   patchCommunity: (id: string, updates: any) => void;
+  patchSettings: (key: string, value: string) => Promise<void>;
+  patchProduct: (id: string, updates: any) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -53,6 +58,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [services, setServices] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [laborRate, setLaborRate] = useState(32.50);
+  const [efficiencyTarget, setEfficiencyTarget] = useState(60.0);
+  const [masterCategories, setMasterCategories] = useState<string[]>(['Standard', 'Fertilizer', 'Herbicide', 'Insecticide', 'Equipment']);
+  const [masterUnits, setMasterUnits] = useState<string[]>(['BAG', 'GAL', 'PAL', 'OZ', 'EA', 'LBS']);
   const [lastRefreshed, setLastRefreshed] = useState<number | null>(null);
 
   const loadData = useCallback(async (force = false) => {
@@ -67,12 +75,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       try {
         const cached = await getIDB(CACHE_KEY);
         if (cached) {
-          const { communities: c, services: s, products: p, laborRate: lr, timestamp } = cached;
+          const { communities: c, services: s, products: p, laborRate: lr, efficiencyTarget: et, timestamp } = cached;
           if (Date.now() - timestamp < CACHE_TTL) {
             setCommunities(c);
             setServices(s);
             setProducts(p);
             setLaborRate(lr);
+            setEfficiencyTarget(et || 60.0);
             setLastRefreshed(timestamp);
             setLoading(false);
             return;
@@ -92,10 +101,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
       const settingsMap = Object.fromEntries((settingsRes.data || []).map((s: any) => [s.key, s.value]));
       const rate = parseFloat(settingsMap['labor_rate_per_hour'] || '32.50');
+      const target = parseFloat(settingsMap['efficiency_target'] || '60.0');
+      const cats = settingsMap['master_categories'] ? JSON.parse(settingsMap['master_categories']) : ['Standard', 'Fertilizer', 'Herbicide', 'Insecticide', 'Equipment'];
+      const units = settingsMap['master_units'] ? JSON.parse(settingsMap['master_units']) : ['BAG', 'GAL', 'PAL', 'OZ', 'EA', 'LBS'];
+      
       const prods = prodRes.data || [];
       const comms = commRes.data || [];
 
       setLaborRate(rate);
+      setEfficiencyTarget(target);
+      setMasterCategories(cats);
+      setMasterUnits(units);
       setProducts(prods);
       setCommunities(comms);
 
@@ -104,23 +120,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       const step = 1000;
       
       while (true) {
+        // We use a broader select to prevent 400 errors if forensic columns are missing
         const { data, error } = await supabase
           .from('service_history')
           .select(`
-            id, service_date, source_community_name, community_id, service_performed, crew_leader, crew_members, total_labor_hours_num, crew_count,
-            service_product_usage ( quantity_used, محصولات:products ( sku, unit_price, coverage_sqft ) )
+            *,
+            service_product_usage ( *, products ( * ) )
           `)
           .order('id', { ascending: true })
           .range(from, from + step - 1);
           
-        if (error) break;
+        if (error) {
+          console.error("Fetch Chunk Error:", error);
+          break;
+        }
         if (data && data.length > 0) {
-          // Normalize the product structure if needed (Supabase aliasing check)
           const normalized = data.map((d: any) => ({
             ...d,
-            service_product_usage: d.service_product_usage.map((u: any) => ({
+            service_product_usage: (d.service_product_usage || []).map((u: any) => ({
               ...u,
-              products: u.محصولات || u.products
+              products: u.products
             }))
           }));
           servData = servData.concat(normalized);
@@ -140,6 +159,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         services: servData,
         products: prods,
         laborRate: rate,
+        efficiencyTarget: target,
         timestamp: now
       });
     } catch (e) {
@@ -176,8 +196,71 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const patchSettings = useCallback(async (key: string, value: string) => {
+    if (key === 'efficiency_target') setEfficiencyTarget(parseFloat(value));
+    if (key === 'labor_rate_per_hour') setLaborRate(parseFloat(value));
+    if (key === 'master_categories') setMasterCategories(JSON.parse(value));
+    if (key === 'master_units') setMasterUnits(JSON.parse(value));
+
+    const { error } = await supabase
+      .from('app_settings')
+      .upsert({ key, value }, { onConflict: 'key' });
+
+    if (error) console.error("Setting Sync Error:", error);
+  }, []);
+
+  const patchProduct = useCallback(async (id: string, updates: any) => {
+    let nextProducts: any[] = [];
+    setProducts(prev => {
+      const next = prev.map(p => p.id === id ? { ...p, ...updates } : p);
+      nextProducts = next;
+      return next;
+    });
+
+    // Update the services list in memory too so inventory page sees it immediately
+    setServices(prev => prev.map(s => ({
+      ...s,
+      service_product_usage: s.service_product_usage.map((u: any) => 
+        u.products?.id === id ? { ...u, products: { ...u.products, ...updates } } : u
+      )
+    })));
+
+    // Sync with IndexedDB background
+    try {
+      const currentCache = await getIDB(CACHE_KEY);
+      if (currentCache) {
+        await setIDB(CACHE_KEY, {
+          ...currentCache,
+          products: nextProducts,
+          services: currentCache.services.map((s: any) => ({
+            ...s,
+            service_product_usage: s.service_product_usage.map((u: any) => 
+              u.products?.id === id ? { ...u, products: { ...u.products, ...updates } } : u
+            )
+          }))
+        });
+      }
+    } catch (e) {
+      console.warn("Failed background cache sync", e);
+    }
+  }, []);
+
+  const lastRefreshedRef = useRef(lastRefreshed);
+  useEffect(() => { lastRefreshedRef.current = lastRefreshed; }, [lastRefreshed]);
+
   useEffect(() => {
     loadData();
+    
+    // Background sync heartbeat: check every minute if we need a refresh
+    const interval = setInterval(() => {
+      const lr = lastRefreshedRef.current;
+      if (lr && (Date.now() - lr > CACHE_TTL)) {
+        console.log("Stale cache detected, triggering background sync...");
+        loadData(true);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, [loadData]);
 
   return (
@@ -187,9 +270,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       services,
       products,
       laborRate,
+      efficiencyTarget,
+      masterCategories,
+      masterUnits,
       lastRefreshed,
       refreshData: () => loadData(true),
-      patchCommunity
+      patchCommunity,
+      patchSettings,
+      patchProduct
     }}>
       {children}
     </DataContext.Provider>

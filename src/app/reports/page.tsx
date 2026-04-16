@@ -18,11 +18,14 @@ import {
   X,
   Check,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  ClipboardList
 } from 'lucide-react';
 import { CrewLeaderDisplay } from '@/components/CrewLeaderDisplay';
 import { ServiceDisplay } from '@/components/ServiceDisplay';
 import { CommunityDrawer } from '@/components/CommunityDrawer';
+import { useUser } from '@/hooks/useUser';
+import { useData } from '@/context/DataContext';
 
 // Types
 type Product = { id: string; sku: string; unit_price: number };
@@ -40,9 +43,6 @@ type ServiceHistory = {
   crew_count: number;
   service_product_usage: ServiceProductUsage[];
 };
-
-import { useUser } from '@/hooks/useUser';
-import { useData } from '@/context/DataContext';
 
 export default function ReportsPage() {
   const { profile } = useUser();
@@ -89,11 +89,9 @@ export default function ReportsPage() {
   const filteredData = useMemo(() => {
     let filtered = services;
 
-    // 1. Core Date Filters
     if (dateFrom) filtered = filtered.filter(s => s.service_date >= dateFrom);
     if (dateTo) filtered = filtered.filter(s => s.service_date <= dateTo);
     
-    // 2. Restrictive Target Scope Filters
     if (selectedCommunities.length > 0) {
       const commSet = new Set(selectedCommunities);
       filtered = filtered.filter(s => s.community_id && commSet.has(s.community_id));
@@ -107,7 +105,6 @@ export default function ReportsPage() {
       });
     }
 
-    // 3. Materials Filter (AND/OR Logic)
     if (selectedProducts.length > 0) {
       if (productLogic === 'AND') {
         filtered = filtered.filter(s => {
@@ -122,45 +119,20 @@ export default function ReportsPage() {
       }
     }
 
-    // 4. Monthly Aggregation & Constraint Filtering
-    const monthlyGroups: Record<string, {
-      communityId: string;
-      commName: string;
-      monthKey: string;
-      totalLaborCost: number;
-      totalMaterialCost: number;
-      totalVariance: number;
-      totalEff: number;
-      effCount: number;
-      monthlyPrice: number;
-      services: ServiceHistory[];
-    }> = {};
+    const monthlyGroups: Record<string, any> = {};
 
     filtered.forEach(s => {
       if (!s.community_id) return;
-      const m = s.service_date.substring(0, 7); // YYYY-MM
+      const m = s.service_date.substring(0, 7);
       const key = `${s.community_id}_${m}`;
-      
       const comm = communities.find(c => c.id === s.community_id);
-      const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRate;
+      const laborRateToUse = s.applied_labor_rate || laborRate;
+      const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse;
       let matCost = 0;
-      let variance = 0;
 
       s.service_product_usage.forEach(u => {
-        const qty = u.quantity_used || 0;
-        const price = u.products?.unit_price || 0;
-        const coverage = (u.products as any)?.coverage_sqft || 0;
-        
-        if (qty > 0 && coverage > 0 && comm?.square_footage) {
-           const targetQty = comm.square_footage / coverage;
-           const currentEff = (targetQty / qty) * 100;
-           variance += (qty - targetQty) * price;
-           
-           if (!monthlyGroups[key]) {
-             // We initialize below, but we need variance and eff now
-           }
-        }
-        matCost += qty * price;
+        const productPrice = u.applied_unit_price || u.products?.unit_price || 0;
+        matCost += (u.quantity_used || 0) * productPrice;
       });
 
       if (!monthlyGroups[key]) {
@@ -173,7 +145,7 @@ export default function ReportsPage() {
           totalVariance: 0,
           totalEff: 0,
           effCount: 0,
-          monthlyPrice: comm?.total_monthly_price || 0,
+          monthlyPrice: s.applied_contract_value || comm?.total_monthly_price || 0,
           services: []
         };
       }
@@ -182,7 +154,6 @@ export default function ReportsPage() {
       monthlyGroups[key].totalMaterialCost += matCost;
       monthlyGroups[key].services.push(s);
 
-      // Re-run for precision to be safe with initialization
       s.service_product_usage.forEach(u => {
         const qty = u.quantity_used || 0;
         const coverage = (u.products as any)?.coverage_sqft || 0;
@@ -206,7 +177,7 @@ export default function ReportsPage() {
       return true;
     }));
 
-    const hasNumFilters = minPrice || maxPrice || minMaterial || maxMaterial || minLabor || maxLabor;
+    const hasNumFilters = !!(minPrice || maxPrice || minMaterial || maxMaterial || minLabor || maxLabor);
     
     if (hasNumFilters) {
       filtered = filtered.filter(s => {
@@ -236,23 +207,11 @@ export default function ReportsPage() {
     return { raw: filtered, monthly: finalMonthlyGroups };
   }, [services, communities, dateFrom, dateTo, selectedCommunities, selectedCompanies, selectedProducts, productLogic, minPrice, maxPrice, minMaterial, maxMaterial, minLabor, maxLabor, laborRate, precisionFilter]);
 
-  // Dash Totals
   const { totalRawLabor, totalRawMaterial, totalServiceVisits, totalRawRevenue, totalProfit, totalVariance } = useMemo(() => {
-    let tLab = 0;
-    let tMat = 0;
-    let tVar = 0;
-    
+    let tLab = 0, tMat = 0, tVar = 0, tRev = 0;
     filteredData.monthly.forEach(g => {
-       tLab += g.totalLaborCost;
-       tMat += g.totalMaterialCost;
-       tVar += g.totalVariance;
+       tLab += g.totalLaborCost; tMat += g.totalMaterialCost; tVar += g.totalVariance; tRev += g.monthlyPrice;
     });
-
-    let tRev = 0;
-    filteredData.monthly.forEach(g => {
-       tRev += g.monthlyPrice;
-    });
-
     return {
       totalRawLabor: tLab,
       totalRawMaterial: tMat,
@@ -263,13 +222,12 @@ export default function ReportsPage() {
     };
   }, [filteredData]);
 
-  // Options Mapping
   const companiesList = Array.from(new Set(communities.map(c => c.company).filter(Boolean))).sort();
   const communityOptions = communities.map(c => ({ label: c.name, value: c.id }));
   const companyOptions = companiesList.map(c => ({ label: c, value: c }));
   const productOptions = products.map(p => ({ label: p.sku, value: p.sku }));
 
-  const fmt = (n: number) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const fmtFull = (n: number) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   const exportCSV = () => {
     let csvStr = '';
@@ -281,8 +239,12 @@ export default function ReportsPage() {
     } else {
       csvStr = 'Date,Community,Service Performed,Crew Leader,Materials Used,Labor Cost,Material Cost\n';
       filteredData.raw.forEach(s => {
-        const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRate;
-        const matCost = s.service_product_usage.reduce((sum, u) => sum + (u.quantity_used || 0) * (u.products?.unit_price || 0), 0);
+        const laborRateToUse = s.applied_labor_rate || laborRate;
+        const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse;
+        const matCost = s.service_product_usage.reduce((sum, u) => {
+          const productPrice = u.applied_unit_price || u.products?.unit_price || 0;
+          return sum + (u.quantity_used || 0) * productPrice;
+        }, 0);
         const mats = s.service_product_usage.map(u => `${u.products?.sku || 'Unknown'} (${u.quantity_used})`).join(', ');
         csvStr += `"${s.service_date}","${s.source_community_name}","${s.service_performed.replace(/"/g, '""')}","${s.crew_leader}","${mats}",${laborCost.toFixed(2)},${matCost.toFixed(2)}\n`;
       });
@@ -298,26 +260,22 @@ export default function ReportsPage() {
   };
 
   return (
-    <div style={{ padding: "40px 48px", maxWidth: 1400, margin: "0 auto" }}>
-      <div className="fade-up" style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+    <div style={{ padding: "32px 40px", maxWidth: 1600, margin: "0 auto" }}>
+      
+      {/* Header - Aligned with Analytics */}
+      <div className="fade-up" style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
-            Analytics & Reports
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+             <div style={{ background: '#18181b', padding: 8, borderRadius: 10, color: 'white' }}>
+               <ClipboardList size={18} />
+             </div>
+             <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Financial Reports</h1>
           </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>Reports</h1>
-          <p style={{ color: "var(--text-muted)", marginTop: 6, fontSize: 14 }}>
-            Filter communities and operations to discover cost anomalies and profitability.
-          </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', gap: 12 }}>
           {permissions.can_export_csv && (
-            <button 
-              onClick={exportCSV} 
-              disabled={loading} 
-              className="btn btn-ghost" 
-              style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', padding: '10px 16px', fontSize: 13, gap: 8 }}
-            >
-              <Download size={14} /> Export to CSV
+            <button onClick={exportCSV} disabled={loading} className="btn-export">
+              <Download size={14} /> Export Dataset
             </button>
           )}
         </div>
@@ -325,338 +283,213 @@ export default function ReportsPage() {
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
-          <Loader2 size={32} color="var(--accent)" className="animate-spin" />
-          <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Loading report...</div>
+          <Loader2 size={32} className="animate-spin text-zinc-900" />
         </div>
       ) : (
-        <div className="fade-up fade-up-1" style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+        <div className="fade-up" style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
           
-          {/* Left Column: Filters */}
-          <div style={{ width: 340, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="card" style={{ padding: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
-                <Filter size={14} />
-                <span style={{ fontSize: 13, fontWeight: 800 }}>Query Parameters</span>
+          {/* Filters - High Density */}
+          <div style={{ width: 340, flexShrink: 0, position: 'sticky', top: 24 }}>
+            <div className="card" style={{ padding: 24, borderRadius: 32 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+                <Filter size={14} className="text-zinc-400" />
+                <span style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Filter Results</span>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {/* Dates */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <div>
-                  <label className="filter-label">Date Range</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input type="date" className="input" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                    <span style={{ color: 'var(--text-muted)', alignSelf: 'center' }}>to</span>
-                    <input type="date" className="input" value={dateTo} onChange={e => setDateTo(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                  </div>
-                </div>
-
-                {/* Scope */}
-                <div>
-                  <label className="filter-label">Target Entities</label>
-                  <MultiSelectCombobox 
-                    options={companyOptions} 
-                    selected={selectedCompanies} 
-                    onChange={setSelectedCompanies} 
-                    placeholder="Search companies..." 
-                  />
-                  <div style={{ height: 8 }} />
-                  <MultiSelectCombobox 
-                    options={communityOptions} 
-                    selected={selectedCommunities} 
-                    onChange={setSelectedCommunities} 
-                    placeholder="Search communities..." 
-                  />
-                </div>
-
-                {/* Product */}
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 6 }}>
-                    <label className="filter-label" style={{ marginBottom: 0 }}>Materials Applied</label>
-                    <select 
-                      value={productLogic} 
-                      onChange={e => setProductLogic(e.target.value as any)}
-                      style={{ fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4, border: '1px solid var(--border)', outline: 'none' }}
-                    >
-                      <option value="OR">Require ANY</option>
-                      <option value="AND">Require ALL</option>
-                    </select>
-                  </div>
-                  <MultiSelectCombobox 
-                    options={productOptions} 
-                    selected={selectedProducts} 
-                    onChange={setSelectedProducts} 
-                    placeholder="Search materials..." 
-                  />
-                </div>
-
-                <div style={{ height: 1, background: 'var(--border)' }} />
-
-                {/* Monthly Cost Constraints */}
-                <div>
-                  <label className="filter-label">Constraint: Monthly Contract Value</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input type="number" placeholder="Min $" className="input" value={minPrice} onChange={e => setMinPrice(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                    <input type="number" placeholder="Max $" className="input" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="filter-label">Constraint: Monthly Labor Cost</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input type="number" placeholder="Min $" className="input" value={minLabor} onChange={e => setMinLabor(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                    <input type="number" placeholder="Max $" className="input" value={maxLabor} onChange={e => setMaxLabor(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
+                  <label className="filter-label">Service Date Range</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <input type="date" className="input text-xs" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
+                    <div style={{ textAlign: 'center', fontSize: 10, fontWeight: 900, color: '#d4d4d8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>to</div>
+                    <input type="date" className="input text-xs" value={dateTo} onChange={e => setDateTo(e.target.value)} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="filter-label">Constraint: Monthly Product Cost</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input type="number" placeholder="Min $" className="input" value={minMaterial} onChange={e => setMinMaterial(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                    <input type="number" placeholder="Max $" className="input" value={maxMaterial} onChange={e => setMaxMaterial(e.target.value)} style={{ padding: '8px', fontSize: 12 }} />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="filter-label">Precision Filter</label>
-                  <select 
-                    value={precisionFilter} 
-                    onChange={e => setPrecisionFilter(e.target.value as any)}
-                    className="input"
-                    style={{ padding: '8px', fontSize: 12 }}
-                  >
-                    <option value="all">Show All Precision Grades</option>
-                    <option value="waste">Material Waste (&lt;90%)</option>
-                    <option value="bullseye">Bullseyes (90-110%)</option>
-                    <option value="low-coverage">Low Coverage (&gt;110%)</option>
+                  <label className="filter-label">Efficiency Filter</label>
+                  <select value={precisionFilter} onChange={e => setPrecisionFilter(e.target.value as any)} className="input text-xs">
+                    <option value="all">View All Results</option>
+                    <option value="waste">Filter: Waste (&lt;90%)</option>
+                    <option value="bullseye">Filter: Bullseye (90-110%)</option>
+                    <option value="low-coverage">Filter: Low Coverage (&gt;110%)</option>
                   </select>
                 </div>
 
-                <div style={{ height: 1, background: 'var(--border)' }} />
+                <div>
+                  <label className="filter-label">Companies & Communities</label>
+                  <MultiSelectCombobox options={companyOptions} selected={selectedCompanies} onChange={setSelectedCompanies} placeholder="Filter Companies..." />
+                  <div style={{ height: 6 }} />
+                  <MultiSelectCombobox options={communityOptions} selected={selectedCommunities} onChange={setSelectedCommunities} placeholder="Filter Communities..." />
+                </div>
+
+                <div>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                     <label className="filter-label" style={{ marginBottom: 0 }}>Product Usage</label>
+                     <button onClick={() => setProductLogic(l => l === 'OR' ? 'AND': 'OR')} className="text-[9px] font-black text-zinc-400 hover:text-zinc-900 uppercase">
+                       Mode: {productLogic}
+                     </button>
+                   </div>
+                   <MultiSelectCombobox options={productOptions} selected={selectedProducts} onChange={setSelectedProducts} placeholder="Filter Products..." />
+                </div>
+
+                <div style={{ height: 1, background: '#f1f5f9' }} />
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="filter-label">Monthly Contract ($)</label>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input type="number" placeholder="Min" className="input text-xs" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+                      <input type="number" placeholder="Max" className="input text-xs" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="filter-label">Total Cost ($)</label>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input type="number" placeholder="Min Labor" className="input text-xs" value={minLabor} onChange={e => setMinLabor(e.target.value)} />
+                      <input type="number" placeholder="Min Material" className="input text-xs" value={minMaterial} onChange={e => setMinMaterial(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
 
                 <button 
-                  type="button"
-                  className="btn btn-ghost mt-2" 
+                  className="btn btn-ghost py-2 text-[10px] font-black uppercase text-zinc-400 hover:text-rose-600"
                   onClick={() => {
-                    setDateFrom(''); setDateTo(''); 
-                    setSelectedCommunities([]); setSelectedCompanies([]); setSelectedProducts([]);
-                    setMinPrice(''); setMaxPrice(''); setMinLabor(''); setMaxLabor(''); setMinMaterial(''); setMaxMaterial('');
-                    setPrecisionFilter('all');
+                    setDateFrom(''); setDateTo(''); setSelectedCommunities([]); setSelectedCompanies([]); setSelectedProducts([]);
+                    setMinPrice(''); setMaxPrice(''); setMinLabor(''); setMaxLabor(''); setMinMaterial(''); setMaxMaterial(''); setPrecisionFilter('all');
                   }}
-                  style={{ fontSize: 12 }}
                 >
-                  Clear All Filters
+                  Reset Parameters
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Dashboard & Data */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
             
-            {/* Top KPIs representing the FILTERED dataset */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {/* Profitability Banner */}
-              <div className="card" style={{ padding: '24px 32px', background: totalProfit >= 0 ? '#f0fdf4' : '#fef2f2', borderColor: totalProfit >= 0 ? '#bbf7d0' : '#fecaca' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: totalProfit >= 0 ? '#166534' : '#b91c1c', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
-                      Filtered Target Profit Margin
-                    </div>
-                    <div style={{ fontSize: 42, fontWeight: 900, color: totalProfit >= 0 ? '#16a34a' : '#dc2626', letterSpacing: '-0.02em', lineHeight: 1 }}>
-                      {fmt(totalProfit)}
-                    </div>
+            {/* Dark Pulse Hero - Unified with Analytics */}
+            <div className="fade-up bg-[#09090b] text-white rounded-[32px] p-8 shadow-xl space-y-6 border border-zinc-800">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className={`w-4 h-4 ${totalProfit > 0 ? 'text-emerald-500' : 'text-rose-500'}`} />
+                    <div className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">Net Profit</div>
                   </div>
-                  <div style={{ textAlign: 'right', display: 'flex', gap: 32 }}>
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', marginBottom: 4, textTransform: 'uppercase' }}>
-                        Accumulated MRR
-                      </div>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)' }}>
-                        {fmt(totalRawRevenue)}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', marginBottom: 4, textTransform: 'uppercase' }}>
-                        Total Overhead
-                      </div>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)' }}>
-                        {fmt(totalRawLabor + totalRawMaterial)}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', marginBottom: 4, textTransform: 'uppercase' }}>
-                        Material Variance
-                      </div>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: totalVariance > 0 ? '#dc2626' : '#16a34a' }}>
-                        {totalVariance > 0 ? '+' : ''}{fmt(totalVariance)}
-                      </div>
-                    </div>
-                  </div>
+                  <div className="text-5xl font-black tracking-tighter leading-none">{fmtFull(totalProfit)}</div>
+                  <div className="text-[13px] font-medium text-zinc-300 mt-2">Total profit across filtered dataset.</div>
+                </div>
+                <div className="text-right flex gap-12">
+                   <div>
+                     <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Contract MRR</div>
+                     <div className="text-3xl font-black">{fmtFull(totalRawRevenue)}</div>
+                   </div>
+                   <div>
+                     <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Visits</div>
+                     <div className="text-3xl font-black text-white">{totalServiceVisits.toLocaleString()}</div>
+                   </div>
                 </div>
               </div>
 
-              {/* Sub-KPIs */}
-              <div style={{ display: 'flex', gap: 16 }}>
-                <div className="card" style={{ flex: 1, padding: 20 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-                    Filtered Labor Cost
-                  </div>
-                  <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>
-                    {fmt(totalRawLabor)}
-                  </div>
-                </div>
-                <div className="card" style={{ flex: 1, padding: 20 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-                    Filtered Material Cost
-                  </div>
-                  <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>
-                    {fmt(totalRawMaterial)}
-                  </div>
-                </div>
-                <div className="card" style={{ flex: 1, padding: 20, background: 'var(--accent-dim)', borderColor: 'var(--accent-border)' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-                    Service Visits Logged
-                  </div>
-                  <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)' }}>
-                    {totalServiceVisits.toLocaleString()}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4 border-t border-zinc-800/50">
+                 <div className="space-y-2">
+                    <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Labor Cost</div>
+                    <div className="text-xl font-black tracking-tighter text-white">{fmtFull(totalRawLabor)}</div>
+                    <div className="h-1 bg-zinc-900 rounded-full overflow-hidden"><div className="h-full bg-zinc-700 w-full" /></div>
+                 </div>
+                 <div className="space-y-2">
+                    <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Material Cost</div>
+                    <div className="text-xl font-black tracking-tighter text-white">{fmtFull(totalRawMaterial)}</div>
+                    <div className="h-1 bg-zinc-900 rounded-full overflow-hidden"><div className="h-full bg-amber-500 w-full" /></div>
+                 </div>
+                 <div className="space-y-2">
+                    <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Budget Variance</div>
+                    <div className={`text-xl font-black tracking-tighter ${totalVariance > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                      {totalVariance > 0 ? '+' : ''}{fmtFull(totalVariance)}
+                    </div>
+                    <div className="h-1 bg-zinc-900 rounded-full overflow-hidden"><div className={`h-full ${totalVariance > 0 ? 'bg-rose-500' : 'bg-emerald-500'} w-full`} /></div>
+                 </div>
               </div>
             </div>
 
-            {/* Results Table */}
-            <div className="card" style={{ overflow: 'hidden' }}>
-              <div style={{ display: 'flex', borderBottom: '1px solid var(--border)' }}>
-                <button 
-                  className={`tab-btn ${activeTab === 'monthly' ? 'active text-zinc-900 border-b-2 border-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}
-                  style={{ padding: '16px 24px', fontSize: 13, fontWeight: 700, background: 'none' }}
-                  onClick={() => setActiveTab('monthly')}
-                >
-                  Monthly Aggregates ({filteredData.monthly.length})
-                </button>
-                <button 
-                  className={`tab-btn ${activeTab === 'raw' ? 'active text-zinc-900 border-b-2 border-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}
-                  style={{ padding: '16px 24px', fontSize: 13, fontWeight: 700, background: 'none' }}
-                  onClick={() => setActiveTab('raw')}
-                >
-                  Service Records ({filteredData.raw.length})
-                </button>
+            {/* List Components */}
+            <div className="card" style={{ overflow: 'hidden', borderRadius: 32 }}>
+              <div className="flex bg-zinc-50 dark:bg-zinc-900/50 p-1">
+                <button onClick={() => setActiveTab('monthly')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all ${activeTab === 'monthly' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}>MONTHLY AGGREGATES</button>
+                <button onClick={() => setActiveTab('raw')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all ${activeTab === 'raw' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}>SERVICE RECORDS</button>
               </div>
 
-              <div style={{ overflowX: 'auto', maxHeight: 600 }}>
-                <table className="tgs-table" style={{ width: '100%', minWidth: 800 }}>
-                  <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 10, boxShadow: '0 1px 0 var(--border)' }}>
-                    {activeTab === 'monthly' ? (
-                      <tr>
-                        <th>Month</th>
-                        <th>Community</th>
-                        <th style={{ textAlign: 'right' }}>Contract MRR</th>
-                        <th style={{ textAlign: 'right' }}>Labor Cost</th>
-                        <th style={{ textAlign: 'right' }}>Material Cost</th>
-                        <th style={{ textAlign: 'center', minWidth: 140 }}>Application Precision</th>
-                        <th style={{ textAlign: 'center' }}>Total Visits</th>
-                      </tr>
-                    ) : (
-                      <tr>
-                        <th>Date</th>
-                        <th>Community</th>
-                        <th>Service</th>
-                        <th>Crew</th>
-                        <th>Materials Used</th>
-                        <th style={{ textAlign: 'right' }}>Labor Cost</th>
-                        <th style={{ textAlign: 'right' }}>Material Cost</th>
-                      </tr>
-                    )}
+              <div style={{ overflowX: 'auto', maxHeight: 800 }}>
+                <table className="tgs-table">
+                  <thead>
+                    <tr>
+                      {activeTab === 'monthly' ? (
+                        <>
+                          <th style={{ padding: '16px 24px' }}>Month</th>
+                          <th>Community</th>
+                          <th style={{ textAlign: 'right' }}>Contract</th>
+                          <th>Labor Cost</th>
+                          <th>Material Cost</th>
+                          <th style={{ textAlign: 'center' }}>Precision</th>
+                          <th style={{ textAlign: 'center' }}>Visits</th>
+                        </>
+                      ) : (
+                        <>
+                          <th style={{ padding: '16px 24px' }}>Date</th>
+                          <th>Community</th>
+                          <th>Service Performed</th>
+                          <th>Crew Leader</th>
+                          <th style={{ textAlign: 'right' }}>Burn ($)</th>
+                        </>
+                      )}
+                    </tr>
                   </thead>
-                  <tbody style={{ fontSize: 13 }}>
+                  <tbody>
                     {activeTab === 'monthly' ? (
-                      filteredData.monthly.length === 0 ? (
-                        <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No monthly data matches the current filters.</td></tr>
-                      ) : (
-                        filteredData.monthly.map((g, i) => {
-                          const avgEff = g.avgEff;
-                          const isPrecision = avgEff !== null && avgEff >= 90 && avgEff <= 110;
-                          const isOver = avgEff !== null && avgEff < 90;
-                          const isUnder = avgEff !== null && avgEff > 110;
-
-                          return (
-                            <tr key={i}>
-                              <td style={{ fontWeight: 800, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{g.formattedMonth}</td>
-                              <td style={{ textAlign: 'left' }}>
-                                <button 
-                                  onClick={() => setSelectedCommunityForDrawer(g.communityId)}
-                                  className="font-black text-zinc-900 dark:text-white hover:text-zinc-600 transition"
-                                  style={{ textAlign: 'left', width: '100%', display: 'block' }}
-                                >
-                                  {g.commName}
-                                </button>
-                              </td>
-                              <td style={{ textAlign: 'right', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{fmt(g.monthlyPrice)}</td>
-                              <td style={{ textAlign: 'right', fontFamily: 'monospace', fontWeight: 600, color: g.totalLaborCost > 0 ? 'var(--orange-600, #ea580c)' : 'var(--text-subtle)' }}>{fmt(g.totalLaborCost)}</td>
-                              <td style={{ textAlign: 'right', fontFamily: 'monospace', fontWeight: 600, color: g.totalMaterialCost > 0 ? 'var(--purple-600, #9333ea)' : 'var(--text-subtle)' }}>{fmt(g.totalMaterialCost)}</td>
-                              <td style={{ textAlign: 'right' }}>
-                                {avgEff !== null ? (
-                                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                      {isPrecision ? <Check className="w-3 h-3 text-emerald-500" /> : isOver ? <TrendingDown className="w-3 h-3 text-rose-500" /> : <TrendingUp className="w-3 h-3 text-amber-500" />}
-                                      <span style={{ fontWeight: 800, color: isPrecision ? '#16a34a' : isOver ? '#e11d48' : '#d97706' }}>
-                                        {avgEff.toFixed(0)}%
-                                      </span>
-                                    </div>
-                                    <span style={{ fontSize: 9, fontWeight: 900, textTransform: 'uppercase', color: isPrecision ? '#16a34a' : isOver ? '#e11d48' : '#d97706' }}>
-                                      {isPrecision ? 'Bullseye' : isOver ? 'Over-Applied' : 'Low Coverage'}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-subtle)' }}>N/A</span>
-                                )}
-                              </td>
-                              <td style={{ textAlign: 'center' }}><span className="badge badge-neutral">{g.services.length}</span></td>
-                            </tr>
-                          );
-                        })
-                      )
+                      filteredData.monthly.map((g, i) => (
+                        <tr key={i}>
+                          <td style={{ padding: '16px 24px', verticalAlign: 'middle' }}>
+                            <span style={{ fontSize: 11, fontWeight: 800, color: '#71717a' }}>{g.formattedMonth}</span>
+                          </td>
+                          <td style={{ verticalAlign: 'middle' }}>
+                            <button onClick={() => setSelectedCommunityForDrawer(g.communityId)} className="text-[13px] font-black text-zinc-900 hover:underline">{g.commName}</button>
+                          </td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 700, fontSize: 13, color: '#71717a' }}>{fmtFull(g.monthlyPrice)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(g.totalLaborCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(g.totalMaterialCost)}</td>
+                          <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                            {g.avgEff !== null ? (
+                              <div className="flex flex-col items-center">
+                                <span style={{ fontSize: 12, fontWeight: 900, color: g.avgEff >= 90 && g.avgEff <= 110 ? '#10b981' : g.avgEff < 90 ? '#f43f5e' : '#f59e0b' }}>
+                                  {g.avgEff.toFixed(0)}%
+                                </span>
+                                <span style={{ fontSize: 8, fontWeight: 900, textTransform: 'uppercase', opacity: 0.6 }}>
+                                  {g.avgEff >= 90 && g.avgEff <= 110 ? 'Bullseye' : g.avgEff < 90 ? 'Over' : 'Under'}
+                                </span>
+                              </div>
+                            ) : <span className="text-zinc-300">—</span>}
+                          </td>
+                          <td style={{ textAlign: 'center', verticalAlign: 'middle' }}><span className="badge badge-zinc">{g.services.length}</span></td>
+                        </tr>
+                      ))
                     ) : (
-                      filteredData.raw.length === 0 ? (
-                        <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No service visits match the current filters.</td></tr>
-                      ) : (
-                        filteredData.raw.map((s, i) => {
-                          const lCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRate;
-                          const mCost = s.service_product_usage.reduce((sum, u) => sum + (u.quantity_used || 0) * (u.products?.unit_price || 0), 0);
-                          return (
-                            <tr key={i}>
-                              <td style={{ whiteSpace: 'nowrap', fontSize: 12, color: 'var(--text-muted)' }}>{s.service_date}</td>
-                              <td style={{ textAlign: 'left' }}>
-                                <button 
-                                  onClick={() => { if(s.community_id) setSelectedCommunityForDrawer(s.community_id); }}
-                                  className="font-semibold hover:text-zinc-700 transition disabled:opacity-50"
-                                  disabled={!s.community_id}
-                                  style={{ textAlign: 'left', width: '100%', display: 'block' }}
-                                >
-                                  {s.source_community_name}
-                                </button>
-                              </td>
-                              <td><ServiceDisplay text={s.service_performed} limitLines={1} size="sm" /></td>
-                              <td><CrewLeaderDisplay name={s.crew_leader} crewMembers={s.crew_members} size="xs" /></td>
-                              <td>
-                                {s.service_product_usage.length > 0 ? (
-                                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                                    {s.service_product_usage.map((u: any, idx: number) => (
-                                      <span key={idx} style={{ fontSize: 11, background: 'var(--surface-sunken)', padding: '2px 6px', borderRadius: 4, border: '1px solid var(--border)' }}>
-                                        {u.products?.sku || 'Unknown'} <span style={{ color: 'var(--text-subtle)' }}>({u.quantity_used})</span>
-                                      </span>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <span style={{ color: 'var(--text-subtle)' }}>—</span>
-                                )}
-                              </td>
-                              <td style={{ textAlign: 'right', fontFamily: 'monospace', color: lCost > 0 ? 'var(--text)' : 'var(--text-subtle)' }}>{lCost > 0 ? fmt(lCost) : '—'}</td>
-                              <td style={{ textAlign: 'right', fontFamily: 'monospace', color: mCost > 0 ? 'var(--text)' : 'var(--text-subtle)' }}>{mCost > 0 ? fmt(mCost) : '—'}</td>
-                            </tr>
-                          );
-                        })
-                      )
+                      filteredData.raw.map((s, i) => {
+                        const laborRateToUse = s.applied_labor_rate || laborRate;
+                        const totalBurn = ((s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse) + s.service_product_usage.reduce((sum, u) => {
+                          const productPrice = u.applied_unit_price || u.products?.unit_price || 0;
+                          return sum + (u.quantity_used || 0) * productPrice;
+                        }, 0);
+                        return (
+                          <tr key={i}>
+                            <td style={{ padding: '16px 24px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, fontWeight: 800, color: '#71717a' }}>{s.service_date}</span></td>
+                            <td style={{ verticalAlign: 'middle' }}>
+                              <button onClick={() => s.community_id && setSelectedCommunityForDrawer(s.community_id)} className="text-[12px] font-black text-zinc-900">{s.source_community_name}</button>
+                            </td>
+                            <td style={{ verticalAlign: 'middle' }}><ServiceDisplay text={s.service_performed} limitLines={1} size="sm" /></td>
+                            <td style={{ verticalAlign: 'middle' }}><CrewLeaderDisplay name={s.crew_leader} crewMembers={s.crew_members} size="xs" /></td>
+                            <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(totalBurn)}</td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>
@@ -668,102 +501,47 @@ export default function ReportsPage() {
       )}
       
       <style dangerouslySetInnerHTML={{__html: `
-        .filter-label {
-          display: block;
-          font-size: 10px;
-          font-weight: 800;
-          color: var(--text-subtle);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          margin-bottom: 6px;
-        }
+        .filter-label { display: block; font-size: 10px; font-weight: 900; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-style: italic; }
+        .btn-export { background: white; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 16px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; transition: all 0.2s; cursor: pointer; }
+        .btn-export:hover { border-color: #18181b; background: #fafafa; }
+        .badge-zinc { background: #f4f4f5; color: #18181b; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; border: 1px solid #e4e4e7; }
       `}} />
       
       {selectedCommunityForDrawer && (
-        <CommunityDrawer 
-          communityId={selectedCommunityForDrawer} 
-          onClose={() => setSelectedCommunityForDrawer(null)} 
-        />
+        <CommunityDrawer communityId={selectedCommunityForDrawer} onClose={() => setSelectedCommunityForDrawer(null)} />
       )}
     </div>
   );
 }
 
-// Custom Multi-Select Combobox Component
-function MultiSelectCombobox({ 
-  options, 
-  selected, 
-  onChange, 
-  placeholder 
-}: { 
-  options: { label: string; value: string }[], 
-  selected: string[], 
-  onChange: (vals: string[]) => void, 
-  placeholder: string 
-}) {
+function MultiSelectCombobox({ options, selected, onChange, placeholder }: any) {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-
-  const availableOptions = options.filter(o => !selected.includes(o.value) && o.label.toLowerCase().includes(query.toLowerCase()));
-  const selectedOptions = selected.map(v => options.find(o => o.value === v)).filter(Boolean) as {label: string, value: string}[];
-
-  const toggleOption = (val: string) => {
-    if (selected.includes(val)) {
-      onChange(selected.filter(v => v !== val));
-    } else {
-      onChange([...selected, val]);
-      setQuery('');
-    }
+  const available = options.filter((o:any) => !selected.includes(o.value) && o.label.toLowerCase().includes(query.toLowerCase()));
+  const toggle = (val: string) => {
+    if (selected.includes(val)) onChange(selected.filter((v:any) => v !== val));
+    else { onChange([...selected, val]); setQuery(''); }
   };
-
   return (
-    <div style={{ position: 'relative' }}>
-      <div className="input" style={{ display: 'flex', alignItems: 'center', padding: '6px 10px', gap: 8 }}>
-        <Search size={14} color="var(--text-muted)" />
-        <input 
-          type="text" 
-          value={query}
-          onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
-          onFocus={() => setIsOpen(true)}
-          onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          placeholder={placeholder}
-          style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: 12 }}
-        />
+    <div className="relative">
+      <div className="input flex items-center p-2 gap-2" style={{ borderRadius: 12 }}>
+        <Search size={14} className="text-zinc-400" />
+        <input type="text" value={query} onChange={e => { setQuery(e.target.value); setIsOpen(true); }} onFocus={() => setIsOpen(true)} onBlur={() => setTimeout(() => setIsOpen(false), 200)} placeholder={placeholder} className="bg-transparent outline-none w-full text-xs font-bold" />
       </div>
-
-      {/* Selected Pills */}
-      {selectedOptions.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
-          {selectedOptions.map(opt => (
-            <div 
-              key={opt.value} 
-              style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'var(--accent-dim)', color: 'var(--accent)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}
-            >
-              {opt.label}
-              <button 
-                onClick={() => toggleOption(opt.value)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6, padding: 0, display: 'flex' }}
-              >
-                <X size={10} />
-              </button>
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {selected.map((v:any) => (
+            <div key={v} className="bg-zinc-100 text-zinc-700 px-2 py-1 rounded-lg text-[10px] font-black flex items-center gap-1.5 border border-zinc-200">
+              {options.find((o:any) => o.value === v)?.label}
+              <button onClick={() => toggle(v)}><X size={10} /></button>
             </div>
           ))}
         </div>
       )}
-
-      {/* Dropdown Menu */}
-      {isOpen && availableOptions.length > 0 && (
-        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', border: '1px solid var(--border)', borderRadius: 8, marginTop: 4, maxHeight: 200, overflowY: 'auto', zIndex: 50, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-          {availableOptions.map(opt => (
-            <div 
-              key={opt.value} 
-              onClick={() => toggleOption(opt.value)}
-              style={{ padding: '8px 12px', fontSize: 12, cursor: 'pointer', borderBottom: '1px solid var(--border-subtle)' }}
-              onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-2)'}
-              onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-            >
-              {opt.label}
-            </div>
+      {isOpen && available.length > 0 && (
+        <div className="absolute top-full left-0 right-0 bg-white border border-zinc-200 rounded-xl mt-1 max-vh-[200px] overflow-y-auto z-50 shadow-xl p-1">
+          {available.map((o:any) => (
+            <div key={o.value} onClick={() => toggle(o.value)} className="p-2 text-xs font-bold hover:bg-zinc-50 rounded-lg cursor-pointer">{o.label}</div>
           ))}
         </div>
       )}

@@ -19,6 +19,8 @@ import { CrewLeaderMerger } from '@/components/CrewLeaderMerger';
 import { CompanyMerger } from '@/components/CompanyMerger';
 import { MaterialCatalog } from '@/components/MaterialCatalog';
 import { IdentityManager } from '@/components/IdentityManager';
+import { PricingTimelineManager } from '@/components/PricingTimelineManager';
+import { EfficiencyTargetEditor } from '@/components/EfficiencyTargetEditor';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,16 +60,17 @@ export default async function SettingsPage() {
   const laborRate = parseFloat(settingsMap['labor_rate_per_hour'] || '32.50');
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="fade-up mb-8 flex justify-between items-start">
+    <div style={{ padding: "40px 48px", maxWidth: 1600, margin: "0 auto" }}>
+      {/* Header - Unified Styling */}
+      <div className="fade-up mb-12 flex justify-between items-center">
         <div>
-          <div className="flex items-center gap-3">
-            <Settings size={28} className="text-zinc-900 dark:text-white" />
-            <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-              System Settings
-            </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+             <div style={{ background: '#18181b', padding: 8, borderRadius: 10, color: 'white' }}>
+               <Settings size={18} />
+             </div>
+             <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>System Settings</h1>
           </div>
-          <p className="text-zinc-500 text-sm mt-2">
+          <p style={{ color: 'var(--text-muted)', marginTop: 8, fontSize: 14, fontWeight: 500 }}>
             {isPowerUser
               ? 'Manage global configurations, pricing parameters, and system access levels.'
               : 'You are in Standard View — certain system settings are restricted based on your role.'}
@@ -88,13 +91,17 @@ export default async function SettingsPage() {
         {isPowerUser && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="card" style={{ padding: 20 }}>
-                <div className="flex items-center gap-2 mb-4">
-                  <Clock size={16} className="text-orange-500" />
-                  <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Financial Baseline</h2>
-                </div>
-                <LaborRateEditor currentRate={laborRate} />
-              </div>
+               <div className="card" style={{ padding: 20 }}>
+                 <div className="flex items-center gap-2 mb-4">
+                   <Clock size={16} className="text-orange-500" />
+                   <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Financial Baseline</h2>
+                 </div>
+                 <LaborRateEditor currentRate={laborRate} />
+                 
+                 <div style={{ marginTop: 32, paddingTop: 32, borderTop: '1px dashed var(--border)' }}>
+                   <PricingTimelineManager />
+                 </div>
+               </div>
 
               <div className="card" style={{ padding: 20 }}>
                 <div className="flex items-center gap-2 mb-4">
@@ -102,6 +109,10 @@ export default async function SettingsPage() {
                   <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Service Guidelines</h2>
                 </div>
                 <GuidelineEditor />
+
+                <div style={{ marginTop: 32, paddingTop: 32, borderTop: '1px dashed var(--border)' }}>
+                  <EfficiencyTargetEditor />
+                </div>
               </div>
             </div>
 
@@ -155,13 +166,13 @@ export default async function SettingsPage() {
                 </div>
               </div>
 
-              <div className="border-t border-zinc-200 pt-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <ShieldCheck size={16} className="text-zinc-600" />
-                  <h3 className="text-sm font-bold">Bulk Normalization Grid</h3>
+                <div className="border-t border-zinc-200 pt-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShieldCheck size={16} className="text-zinc-600" />
+                    <h3 className="text-sm font-bold">Bulk Normalization Grid</h3>
+                  </div>
+                  <GovernanceGrid />
                 </div>
-                <GovernanceGrid />
-              </div>
             </div>
           </div>
         )}
