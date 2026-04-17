@@ -9,7 +9,8 @@ import {
   Building2, 
   Lock, 
   MessageSquareText, 
-  ShieldCheck 
+  ShieldCheck,
+  Map
 } from 'lucide-react';
 import { createServerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
@@ -21,6 +22,9 @@ import { MaterialCatalog } from '@/components/MaterialCatalog';
 import { IdentityManager } from '@/components/IdentityManager';
 import { PricingTimelineManager } from '@/components/PricingTimelineManager';
 import { EfficiencyTargetEditor } from '@/components/EfficiencyTargetEditor';
+import { LogisticsSettingsEditor } from '@/components/LogisticsSettingsEditor';
+import { FinancialSettingsEditor } from '@/components/FinancialSettingsEditor';
+import { AuditLogViewer } from '@/components/AuditLogViewer';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +64,7 @@ export default async function SettingsPage() {
   const laborRate = parseFloat(settingsMap['labor_rate_per_hour'] || '32.50');
 
   return (
-    <div style={{ padding: "40px 48px", maxWidth: 1600, margin: "0 auto" }}>
+    <div style={{ padding: "40px 48px", width: '100%', margin: "0 auto" }}>
       {/* Header - Unified Styling */}
       <div className="fade-up mb-12 flex justify-between items-center">
         <div>
@@ -114,6 +118,29 @@ export default async function SettingsPage() {
                   <EfficiencyTargetEditor />
                 </div>
               </div>
+
+              {/* Logistics & Planning (New Building) */}
+              <div className="card md:col-span-2" style={{ padding: 20 }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Map size={16} className="text-zinc-600" />
+                  <h2 className="font-extrabold text-[10px] uppercase tracking-wider text-zinc-500">Logistics & Planning Parameters</h2>
+                </div>
+                <div className="mb-10">
+              <div className="mb-6">
+                <h2 className="text-xl font-black text-zinc-900">Planning & Logistics</h2>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Configure scheduling thresholds and region parameters</p>
+              </div>
+              <LogisticsSettingsEditor />
+            </div>
+
+            <div className="pt-10 border-t border-zinc-100">
+              <div className="mb-6">
+                <h2 className="text-xl font-black text-zinc-900">Financial Intelligence</h2>
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Define overhead costs and profit margin health brackets</p>
+              </div>
+              <FinancialSettingsEditor />
+            </div>
+              </div>
             </div>
 
             {/* Team & Access Control (Identity) */}
@@ -139,7 +166,6 @@ export default async function SettingsPage() {
             <MaterialCatalog initialProducts={products || []} isEditable={permissions.can_edit_pricing} />
           </div>
         )}
-
         {/* Data Governance & Merging (Highly Sensitive) */}
         {isPowerUser && (
           <div className="card bg-zinc-50/50 border-dashed" style={{ padding: 24 }}>
@@ -173,6 +199,23 @@ export default async function SettingsPage() {
                   </div>
                   <GovernanceGrid />
                 </div>
+            </div>
+          </div>
+        )}
+
+        {/* Security & Audit Trailing (Administrative Only) */}
+        {isPowerUser && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 px-1">
+              <Clock size={20} className="text-zinc-600" />
+              <h2 className="text-xl font-bold tracking-tight">Security & System Lifecycle</h2>
+            </div>
+            <div className="card shadow-sm" style={{ padding: 24 }}>
+              <div className="mb-6">
+                <h3 className="text-lg font-black text-zinc-900 italic">Audit Log Trail</h3>
+                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Full transparency on data entry, modifications, and exports</p>
+              </div>
+              <AuditLogViewer />
             </div>
           </div>
         )}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { Edit2, X, Trash2, Save } from 'lucide-react';
+import { Edit2, X, Trash2, Save, MapPin, Search, RotateCcw } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 export function EditCommunityModal({ community }: { community: any }) {
@@ -24,7 +24,11 @@ export function EditCommunityModal({ community }: { community: any }) {
     square_footage: community.square_footage || 0,
     total_monthly_price: community.total_monthly_price || 0,
     total_annual_price: community.total_annual_price || 0,
+    latitude: community.latitude || null,
+    longitude: community.longitude || null,
   });
+  const [addressInput, setAddressInput] = useState('');
+  const [searching, setSearching] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,7 +45,9 @@ export function EditCommunityModal({ community }: { community: any }) {
           status: formData.status,
           square_footage: parseFloat(formData.square_footage.toString()),
           total_monthly_price: parseFloat(formData.total_monthly_price.toString()),
-          total_annual_price: parseFloat(formData.total_annual_price.toString())
+          total_annual_price: parseFloat(formData.total_annual_price.toString()),
+          latitude: formData.latitude,
+          longitude: formData.longitude
         })
         .eq('id', community.id);
 
@@ -53,6 +59,30 @@ export function EditCommunityModal({ community }: { community: any }) {
       alert('Failed to update community.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const searchAddress = async () => {
+    if (!addressInput.trim()) return;
+    setSearching(true);
+    try {
+      const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput)}`);
+      const data = await resp.json();
+      if (data && data.length > 0) {
+        const result = data[0];
+        setFormData({
+          ...formData,
+          latitude: parseFloat(result.lat),
+          longitude: parseFloat(result.lon)
+        });
+      } else {
+        alert('Address not found. Please try a more specific address or city.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Search failed.');
+    } finally {
+      setSearching(false);
     }
   };
 
@@ -125,6 +155,61 @@ export function EditCommunityModal({ community }: { community: any }) {
               <label className="block text-xs font-bold mb-1.5 text-zinc-700 dark:text-zinc-300">Annual Price ($)</label>
               <input type="number" name="total_annual_price" className="input" value={formData.total_annual_price} onChange={handleChange} />
             </div>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+            <label className="block text-xs font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1">
+              <MapPin size={10} /> Geospatial Pinning
+            </label>
+            <div className="flex gap-2 mb-3">
+              <div className="relative flex-1">
+                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                   <input 
+                     type="text" 
+                     placeholder="Search address or community name..." 
+                     className="input h-10 text-sm" 
+                     style={{ paddingLeft: '44px' }}
+                     value={addressInput}
+                     onChange={e => setAddressInput(e.target.value)}
+                     onKeyDown={e => e.key === 'Enter' && searchAddress()}
+                   />
+              </div>
+              <button 
+                type="button" 
+                onClick={searchAddress}
+                disabled={searching}
+                className="btn btn-ghost border border-zinc-200 dark:border-zinc-800 h-10 px-4"
+              >
+                {searching ? <RotateCcw size={16} className="animate-spin" /> : 'Search'}
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4 bg-zinc-50 dark:bg-zinc-800/50 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800">
+              <div>
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-tighter mb-1">Latitude</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  value={formData.latitude || ''} 
+                  onChange={e => setFormData({...formData, latitude: parseFloat(e.target.value)})}
+                  className="bg-transparent border-none text-xs font-mono font-bold w-full py-0.5 h-auto focus:ring-0 text-zinc-900 dark:text-zinc-100"
+                  placeholder="0.000000"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-tighter mb-1">Longitude</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  value={formData.longitude || ''} 
+                  onChange={e => setFormData({...formData, longitude: parseFloat(e.target.value)})}
+                  className="bg-transparent border-none text-xs font-mono font-bold w-full py-0.5 h-auto focus:ring-0 text-zinc-900 dark:text-zinc-100"
+                  placeholder="0.000000"
+                />
+              </div>
+            </div>
+            <p className="mt-2 text-[10px] text-zinc-500 font-medium">
+              Geographic coordinates enable this community to be scheduled via the Logistics map.
+            </p>
           </div>
         </div>
 

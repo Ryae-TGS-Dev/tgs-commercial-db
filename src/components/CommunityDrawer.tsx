@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Save, Edit2, History, RotateCcw, Eye, ArrowRight } from 'lucide-react';
+import { X, Save, Edit2, History, RotateCcw, Eye, ArrowRight, MapPin, Search, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { ServiceDisplay } from './ServiceDisplay';
@@ -27,6 +27,8 @@ export function CommunityDrawer({
   // Edit states
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [addressInput, setAddressInput] = useState('');
   const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
@@ -52,7 +54,9 @@ export function CommunityDrawer({
           company: cData.company,
           status: cData.status,
           total_monthly_price: cData.total_monthly_price,
-          square_footage: cData.square_footage
+          square_footage: cData.square_footage,
+          latitude: cData.latitude,
+          longitude: cData.longitude
         });
       }
 
@@ -77,6 +81,30 @@ export function CommunityDrawer({
   }, [communityId]);
 
   if (!mounted || !communityId) return null;
+  
+  const searchAddress = async () => {
+    if (!addressInput.trim()) return;
+    setSearching(true);
+    try {
+      const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput)}`);
+      const data = await resp.json();
+      if (data && data.length > 0) {
+        const result = data[0];
+        setFormData({
+          ...formData,
+          latitude: parseFloat(result.lat),
+          longitude: parseFloat(result.lon)
+        });
+      } else {
+        alert('Address not found. Please try a more specific address or city.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Search failed.');
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -87,7 +115,9 @@ export function CommunityDrawer({
           name: formData.name,
           company: formData.company,
           total_monthly_price: parseFloat(formData.total_monthly_price),
-          square_footage: parseFloat(formData.square_footage)
+          square_footage: parseFloat(formData.square_footage),
+          latitude: formData.latitude,
+          longitude: formData.longitude
         })
         .eq('id', communityId);
 
@@ -209,6 +239,59 @@ export function CommunityDrawer({
                         className="input w-full text-sm py-1.5"
                       />
                     </div>
+
+                    {/* Address Geocoding */}
+                    <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
+                      <label className="block text-xs font-bold text-zinc-500 mb-1 flex items-center gap-1">
+                        <MapPin size={10} /> Pin Community Location
+                      </label>
+                      <div className="flex gap-2 mb-2">
+                        <div className="relative flex-1">
+                           <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                           <input 
+                             type="text" 
+                             placeholder="Search address..." 
+                             className="input w-full text-xs py-1.5" 
+                             style={{ paddingLeft: '40px' }}
+                             value={addressInput}
+                             onChange={e => setAddressInput(e.target.value)}
+                             onKeyDown={e => e.key === 'Enter' && searchAddress()}
+                           />
+                        </div>
+                        <button 
+                          type="button" 
+                          onClick={searchAddress}
+                          disabled={searching}
+                          className="btn btn-ghost border border-zinc-200 px-3 py-1.5 text-xs"
+                        >
+                          {searching ? <RotateCcw size={12} className="animate-spin" /> : 'Search'}
+                        </button>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <label className="block text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Lat</label>
+                           <input 
+                             type="number" 
+                             step="any"
+                             value={formData.latitude || ''} 
+                             onChange={e => setFormData({...formData, latitude: parseFloat(e.target.value)})}
+                             className="bg-transparent border-none text-[11px] font-mono font-bold w-full p-0 py-0.5 h-auto focus:ring-0 text-zinc-900"
+                             placeholder="0.000000"
+                           />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Lng</label>
+                           <input 
+                             type="number" 
+                             step="any"
+                             value={formData.longitude || ''} 
+                             onChange={e => setFormData({...formData, longitude: parseFloat(e.target.value)})}
+                             className="bg-transparent border-none text-[11px] font-mono font-bold w-full p-0 py-0.5 h-auto focus:ring-0 text-zinc-900"
+                             placeholder="0.000000"
+                           />
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex gap-2 mt-2">
                       <button onClick={handleSave} disabled={saving} className="btn btn-primary flex-1 py-1.5 text-xs flex justify-center items-center gap-1">
                         {saving ? 'Saving...' : <><Save size={14} /> Save</>}
@@ -227,6 +310,24 @@ export function CommunityDrawer({
                     <div>
                       <div className="text-xs font-bold text-zinc-400">Monthly Contract</div>
                       <div className="text-sm font-mono font-semibold text-zinc-900 dark:text-zinc-100">${parseFloat(community.total_monthly_price || 0).toLocaleString('en-US', {minimumFractionDigits: 2})} / MO</div>
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-zinc-400">Mapping Coordinates</div>
+                      {community.latitude ? (
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <div className="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-100 dark:border-emerald-900 flex items-center gap-1">
+                            <MapPin size={8} /> Pinned
+                          </div>
+                          <span className="text-[11px] font-mono text-zinc-500">{community.latitude?.toFixed(4)}, {community.longitude?.toFixed(4)}</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <div className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded text-[10px] font-bold border border-zinc-200 dark:border-zinc-700">
+                            Unmapped
+                          </div>
+                          <span className="text-[10px] text-zinc-400 italic">No location set</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

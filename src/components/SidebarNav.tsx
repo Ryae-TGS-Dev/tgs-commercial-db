@@ -14,7 +14,8 @@ import {
   LogOut,
   Settings,
   RefreshCcw,
-  Loader2
+  Loader2,
+  Map
 } from "lucide-react";
 import { useData } from "@/context/DataContext";
 
@@ -22,8 +23,9 @@ const NAV = [
   { href: "/", icon: LayoutGrid, label: "Home", permission: 'can_view_dashboard' },
   { href: "/analytics", icon: TrendingUp, label: "Analytics", permission: 'can_view_financials' },
   { href: "/communities", icon: Building2, label: "Community Portfolio", permission: 'can_view_dashboard' },
-  { href: "/inventory", icon: Package, label: "Materials & Labor", permission: 'can_view_dashboard' },
+  { href: "/materials", icon: Package, label: "Materials & Labor", permission: 'can_view_dashboard' },
   { href: "/reports", icon: ClipboardList, label: "Reports", permission: 'can_view_dashboard' },
+  { href: "/logistics", icon: Map, label: "Logistics & Planning", permission: 'can_view_dashboard' },
   { href: "/log", icon: ClipboardList, label: "Record Service", permission: 'can_log_service' },
 ];
 
@@ -57,7 +59,7 @@ export function SidebarNav() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <nav style={{ padding: "0 12px", flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
         {filteredNav.map(({ href, icon: Icon, label }) => {
-          const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
+          const isActive = href === '/' ? pathname === '/' : (pathname === href || pathname.startsWith(`${href}/`));
           
           return (
             <Link 
@@ -65,7 +67,7 @@ export function SidebarNav() {
               href={href} 
               className={`sidebar-link ${isActive ? 'active' : ''}`}
               style={href === '/log' ? {
-                background: isActive ? 'var(--highlight)' : 'var(--highlight-dim)',
+                background: isActive ? 'var(--highlight)' : 'transparent',
                 color: isActive ? '#ffffff' : 'var(--highlight)',
                 border: isActive ? 'none' : '1px solid var(--highlight-border)',
                 fontWeight: 700,

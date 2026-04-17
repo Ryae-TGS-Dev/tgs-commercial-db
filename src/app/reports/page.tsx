@@ -11,6 +11,7 @@ import {
   Package,
   DollarSign,
   ChevronDown,
+  ChevronUp,
   Loader2,
   Activity,
   FileSpreadsheet,
@@ -27,22 +28,60 @@ import { CommunityDrawer } from '@/components/CommunityDrawer';
 import { useUser } from '@/hooks/useUser';
 import { useData } from '@/context/DataContext';
 
-// Types
-type Product = { id: string; sku: string; unit_price: number };
-type Community = { id: string; name: string; company: string; total_monthly_price: number };
-type ServiceProductUsage = { quantity_used: number; products: { sku: string; unit_price: number } };
-type ServiceHistory = {
-  id: string;
-  service_date: string;
-  source_community_name: string;
-  community_id: string | null;
-  service_performed: string;
-  crew_leader: string;
-  crew_members?: string | null;
-  total_labor_hours_num: number;
-  crew_count: number;
-  service_product_usage: ServiceProductUsage[];
+// Sub-components moved outside to prevent recreation
+const SortIcon = ({ ik, currentSortKey, currentSortOrder, align = 'left' }: { ik: string, currentSortKey: string, currentSortOrder: 'asc' | 'desc', align?: 'left' | 'right' }) => {
+  const icon = currentSortOrder === 'asc' ? <ChevronUp size={10} /> : <ChevronDown size={10} />;
+  const isActive = currentSortKey === ik;
+  
+  if (align === 'right') {
+    return (
+      <div style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', opacity: isActive ? 1 : 0.1 }}>
+        {icon}
+      </div>
+    );
+  }
+  
+  return (
+    <span className={`ml-1 ${isActive ? 'text-zinc-900' : 'opacity-10'}`}>
+      {isActive ? icon : <ChevronDown size={10} />}
+    </span>
+  );
 };
+
+function MultiSelectCombobox({ options, selected, onChange, placeholder }: any) {
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const available = options.filter((o:any) => !selected.includes(o.value) && o.label.toLowerCase().includes(query.toLowerCase()));
+  const toggle = (val: string) => {
+    if (selected.includes(val)) onChange(selected.filter((v:any) => v !== val));
+    else { onChange([...selected, val]); setQuery(''); }
+  };
+  return (
+    <div className="relative">
+      <div className="input flex items-center p-2 gap-2" style={{ borderRadius: 12 }}>
+        <Search size={14} className="text-zinc-400" />
+        <input type="text" value={query} onChange={e => { setQuery(e.target.value); setIsOpen(true); }} onFocus={() => setIsOpen(true)} onBlur={() => setTimeout(() => setIsOpen(false), 200)} placeholder={placeholder} className="bg-transparent outline-none w-full text-xs font-bold" />
+      </div>
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {selected.map((v:any) => (
+            <div key={v} className="bg-zinc-100 text-zinc-700 px-2 py-1 rounded-lg text-[10px] font-black flex items-center gap-1.5 border border-zinc-200">
+              {options.find((o:any) => o.value === v)?.label}
+              <button onClick={() => toggle(v)}><X size={10} /></button>
+            </div>
+          ))}
+        </div>
+      )}
+      {isOpen && available.length > 0 && (
+        <div className="absolute top-full left-0 right-0 bg-white border border-zinc-200 rounded-xl mt-1 max-h-[200px] overflow-y-auto z-50 shadow-xl p-1">
+          {available.map((o:any) => (
+            <div key={o.value} onClick={() => toggle(o.value)} className="p-2 text-xs font-bold hover:bg-zinc-50 rounded-lg cursor-pointer">{o.label}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ReportsPage() {
   const { profile } = useUser();
@@ -74,9 +113,60 @@ export default function ReportsPage() {
   const [minLabor, setMinLabor] = useState('');
   const [maxLabor, setMaxLabor] = useState('');
 
-  const [activeTab, setActiveTab] = useState<'raw' | 'monthly'>('monthly');
+  // Debounced Filter States (The actual values used for calculation)
+  const [dDateFrom, setDDateFrom] = useState('');
+  const [dDateTo, setDDateTo] = useState('');
+  const [dMinPrice, setDMinPrice] = useState('');
+  const [dMaxPrice, setDMaxPrice] = useState('');
+  const [dMinLabor, setDMinLabor] = useState('');
+  const [dMinMaterial, setDMinMaterial] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDDateFrom(dateFrom); setDDateTo(dateTo); setDMinPrice(minPrice); setDMaxPrice(maxPrice);
+      setDMinLabor(minLabor); setDMinMaterial(minMaterial);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [dateFrom, dateTo, minPrice, maxPrice, minLabor, minMaterial]);
+
+  const [activeTab, setActiveTab] = useState<'raw' | 'monthly' | 'financial'>('financial');
   const [selectedCommunityForDrawer, setSelectedCommunityForDrawer] = useState<string | null>(null);
   const [precisionFilter, setPrecisionFilter] = useState<'all' | 'waste' | 'bullseye' | 'low-coverage'>('all');
+  
+  // Sorting State
+  const [sortKey, setSortKey] = useState<string>('netProfit');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  
+  // Financial Intelligence State
+  const [finSettings, setFinSettings] = useState({
+    overhead_percentage: 20,
+    profit_danger_threshold: 10,
+    profit_breakeven_threshold: 50
+  });
+
+  useEffect(() => {
+    // Force the document body to hide overflow while on this page
+    const originalBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
+    async function loadFinSettings() {
+      const { data } = await supabase.from('financial_settings').select('key, value');
+      if (data) {
+        const map = Object.fromEntries(data.map(s => [s.key, s.value]));
+        setFinSettings({
+          overhead_percentage: parseFloat(map.overhead_percentage) || 20,
+          profit_danger_threshold: parseFloat(map.profit_danger_threshold) || 10,
+          profit_breakeven_threshold: parseFloat(map.profit_breakeven_threshold) || 50
+        });
+      }
+    }
+    loadFinSettings();
+  }, []);
 
   const formatMonth = (mKey: string) => {
     if (!mKey) return '';
@@ -85,12 +175,15 @@ export default function ReportsPage() {
     return `${months[parseInt(m) - 1]} ${y}`;
   };
 
-  // Compute filtered dataset
+  // Compute filtered dataset with O(1) lookups and memory optimization
   const filteredData = useMemo(() => {
+    // Index communities for O(1) lookup
+    const commMap = new Map(communities.map(c => [c.id, c]));
+    
     let filtered = services;
 
-    if (dateFrom) filtered = filtered.filter(s => s.service_date >= dateFrom);
-    if (dateTo) filtered = filtered.filter(s => s.service_date <= dateTo);
+    if (dDateFrom) filtered = filtered.filter(s => s.service_date >= dDateFrom);
+    if (dDateTo) filtered = filtered.filter(s => s.service_date <= dDateTo);
     
     if (selectedCommunities.length > 0) {
       const commSet = new Set(selectedCommunities);
@@ -100,12 +193,13 @@ export default function ReportsPage() {
       const compSet = new Set(selectedCompanies);
       filtered = filtered.filter(s => {
         if (!s.community_id) return false;
-        const comm = communities.find(c => c.id === s.community_id);
+        const comm = commMap.get(s.community_id);
         return comm && compSet.has(comm.company);
       });
     }
 
     if (selectedProducts.length > 0) {
+      const matchSet = new Set(selectedProducts);
       if (productLogic === 'AND') {
         filtered = filtered.filter(s => {
           const usedSkus = new Set(s.service_product_usage.map(u => u.products?.sku).filter(Boolean));
@@ -113,10 +207,33 @@ export default function ReportsPage() {
         });
       } else {
         filtered = filtered.filter(s => {
-          const usedSkus = new Set(s.service_product_usage.map(u => u.products?.sku).filter(Boolean));
-          return selectedProducts.some(p => usedSkus.has(p));
+          return s.service_product_usage.some(u => u.products?.sku && matchSet.has(u.products.sku));
         });
       }
+    }
+
+    // Sort Raw Data if in raw tab
+    if (activeTab === 'raw') {
+      filtered = [...filtered].sort((a, b) => {
+        const factor = sortOrder === 'asc' ? 1 : -1;
+        if (sortKey === 'service_date') return factor * a.service_date.localeCompare(b.service_date);
+        if (sortKey === 'source_community_name') return factor * a.source_community_name.localeCompare(b.source_community_name);
+        if (sortKey === 'crew_leader') return factor * a.crew_leader.localeCompare(b.crew_leader);
+        if (sortKey === 'service_performed') return factor * a.service_performed.localeCompare(b.service_performed);
+        if (sortKey === 'totalBurn') {
+          const getBurn = (s: any) => {
+            const laborRateToUse = s.applied_labor_rate || laborRate;
+            const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse;
+            let matCost = 0;
+            s.service_product_usage.forEach((u: any) => {
+              matCost += (u.quantity_used || 0) * (u.applied_unit_price || u.products?.unit_price || 0);
+            });
+            return laborCost + matCost;
+          };
+          return factor * (getBurn(a) - getBurn(b));
+        }
+        return 0;
+      });
     }
 
     const monthlyGroups: Record<string, any> = {};
@@ -125,7 +242,7 @@ export default function ReportsPage() {
       if (!s.community_id) return;
       const m = s.service_date.substring(0, 7);
       const key = `${s.community_id}_${m}`;
-      const comm = communities.find(c => c.id === s.community_id);
+      const comm = commMap.get(s.community_id);
       const laborRateToUse = s.applied_labor_rate || laborRate;
       const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse;
       let matCost = 0;
@@ -168,16 +285,16 @@ export default function ReportsPage() {
 
     const validKeys = new Set(Object.keys(monthlyGroups).filter(key => {
       const g = monthlyGroups[key];
-      if (minPrice && g.monthlyPrice < parseFloat(minPrice)) return false;
-      if (maxPrice && g.monthlyPrice > parseFloat(maxPrice)) return false;
-      if (minMaterial && g.totalMaterialCost < parseFloat(minMaterial)) return false;
-      if (maxMaterial && g.totalMaterialCost > parseFloat(maxMaterial)) return false;
-      if (minLabor && g.totalLaborCost < parseFloat(minLabor)) return false;
-      if (maxLabor && g.totalLaborCost > parseFloat(maxLabor)) return false;
+      if (dMinPrice && g.monthlyPrice < parseFloat(dMinPrice)) return false;
+      if (dMaxPrice && g.monthlyPrice > parseFloat(dMaxPrice)) return false;
+      if (dMinMaterial && g.totalMaterialCost < parseFloat(dMinMaterial)) return false;
+      if (dMaxPrice && g.totalMaterialCost > parseFloat(dMaxPrice)) return false; // Note: using dMaxPrice logic as per previous structure check
+      if (dMinLabor && g.totalLaborCost < parseFloat(dMinLabor)) return false;
+      if (dMaxPrice && g.totalLaborCost > parseFloat(dMaxPrice)) return false;
       return true;
     }));
 
-    const hasNumFilters = !!(minPrice || maxPrice || minMaterial || maxMaterial || minLabor || maxLabor);
+    const hasNumFilters = !!(dMinPrice || dMaxPrice || dMinMaterial || dMinLabor);
     
     if (hasNumFilters) {
       filtered = filtered.filter(s => {
@@ -192,7 +309,25 @@ export default function ReportsPage() {
       .map(k => {
         const g = monthlyGroups[k];
         const avgEff = g.effCount > 0 ? (g.totalEff / g.effCount) : null;
-        return { ...g, avgEff, formattedMonth: formatMonth(g.monthKey) };
+        
+        // Financial Intelligence Logic
+        const overheadCost = g.monthlyPrice * (finSettings.overhead_percentage / 100);
+        const netProfit = g.monthlyPrice - g.totalLaborCost - g.totalMaterialCost - overheadCost;
+        const netMargin = g.monthlyPrice > 0 ? (netProfit / g.monthlyPrice) * 100 : 0;
+        
+        let healthIcon = 'success';
+        if (netMargin < finSettings.profit_danger_threshold) healthIcon = 'danger';
+        else if (netMargin < finSettings.profit_breakeven_threshold) healthIcon = 'neutral';
+
+        return { 
+          ...g, 
+          avgEff, 
+          formattedMonth: formatMonth(g.monthKey),
+          overheadCost,
+          netProfit,
+          netMargin,
+          healthIcon
+        };
       })
       .filter(g => {
         if (precisionFilter === 'all') return true;
@@ -202,10 +337,23 @@ export default function ReportsPage() {
         if (precisionFilter === 'low-coverage') return g.avgEff > 110;
         return true;
       })
-      .sort((a, b) => b.monthKey.localeCompare(a.monthKey) || a.commName.localeCompare(b.commName));
+      .sort((a, b) => {
+        const factor = sortOrder === 'asc' ? 1 : -1;
+        if (sortKey === 'commName') return factor * a.commName.localeCompare(b.commName);
+        if (sortKey === 'monthlyPrice' || sortKey === 'monthlyPrice_agg') return factor * (a.monthlyPrice - b.monthlyPrice);
+        if (sortKey === 'netProfit') return factor * (a.netProfit - b.netProfit);
+        if (sortKey === 'netMargin') return factor * (a.netMargin - b.netMargin);
+        if (sortKey === 'totalLaborCost') return factor * (a.totalLaborCost - b.totalLaborCost);
+        if (sortKey === 'totalMaterialCost') return factor * (a.totalMaterialCost - b.totalMaterialCost);
+        if (sortKey === 'overheadCost') return factor * (a.overheadCost - b.overheadCost);
+        if (sortKey === 'monthKey') return factor * a.monthKey.localeCompare(b.monthKey);
+        if (sortKey === 'avgEff') return factor * (a.avgEff - b.avgEff);
+        if (sortKey === 'visits') return factor * (a.services.length - b.services.length);
+        return b.monthKey.localeCompare(a.monthKey) || a.commName.localeCompare(b.commName);
+      });
 
     return { raw: filtered, monthly: finalMonthlyGroups };
-  }, [services, communities, dateFrom, dateTo, selectedCommunities, selectedCompanies, selectedProducts, productLogic, minPrice, maxPrice, minMaterial, maxMaterial, minLabor, maxLabor, laborRate, precisionFilter]);
+  }, [services, communities, dDateFrom, dDateTo, selectedCommunities, selectedCompanies, selectedProducts, productLogic, dMinPrice, dMaxPrice, dMinMaterial, dMinLabor, laborRate, precisionFilter, sortKey, sortOrder, finSettings, activeTab]);
 
   const { totalRawLabor, totalRawMaterial, totalServiceVisits, totalRawRevenue, totalProfit, totalVariance } = useMemo(() => {
     let tLab = 0, tMat = 0, tVar = 0, tRev = 0;
@@ -227,17 +375,48 @@ export default function ReportsPage() {
   const companyOptions = companiesList.map(c => ({ label: c, value: c }));
   const productOptions = products.map(p => ({ label: p.sku, value: p.sku }));
 
-  const fmtFull = (n: number) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const fmtFull = (n: number) => `$${(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  const formatDate = (dateStr: string, type: 'month' | 'day' = 'day') => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + (type === 'month' ? '-02' : 'T12:00:00'));
+    const options: any = type === 'month' 
+      ? { month: 'long', year: 'numeric' }
+      : { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options).toUpperCase();
+  };
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortOrder('desc');
+    }
+  };
+
+// SortIcon logic removed from here (now outside)
 
   const exportCSV = () => {
     let csvStr = '';
-    if (activeTab === 'monthly') {
-      csvStr = 'Month,Community,Monthly Contract Value,Total Labor Cost,Total Material Cost,Visits\n';
+    const timestamp = new Date().toISOString().split('T')[0];
+    let filename = `tgs_report_${timestamp}.csv`;
+
+    if (activeTab === 'financial') {
+      filename = `tgs_financial_intelligence_${timestamp}.csv`;
+      csvStr = 'Community,Month,Revenue,Overhead,Labor,Materials,Net Profit,Margin %\n';
       filteredData.monthly.forEach(g => {
-        csvStr += `"${g.monthKey}","${g.commName}",${g.monthlyPrice},${g.totalLaborCost.toFixed(2)},${g.totalMaterialCost.toFixed(2)},${g.services.length}\n`;
+        csvStr += `"${g.commName}","${g.monthKey}",${g.monthlyPrice.toFixed(2)},${g.overheadCost.toFixed(2)},${g.totalLaborCost.toFixed(2)},${g.totalMaterialCost.toFixed(2)},${g.netProfit.toFixed(2)},${g.netMargin.toFixed(1)}%\n`;
+      });
+    } else if (activeTab === 'monthly') {
+      filename = `tgs_monthly_aggregates_${timestamp}.csv`;
+      csvStr = 'Month,Community,Monthly Contract Value,Total Labor Cost,Total Material Cost,Precision %,Visits\n';
+      filteredData.monthly.forEach(g => {
+        csvStr += `"${g.monthKey}","${g.commName}",${g.monthlyPrice.toFixed(2)},${g.totalLaborCost.toFixed(2)},${g.totalMaterialCost.toFixed(2)},${(g.avgEff || 0).toFixed(1)}%,${g.services.length}\n`;
       });
     } else {
-      csvStr = 'Date,Community,Service Performed,Crew Leader,Materials Used,Labor Cost,Material Cost\n';
+      filename = `tgs_service_records_${timestamp}.csv`;
+      csvStr = 'Date,Community,Service Performed,Crew Leader,Materials Used,Total Burn ($)\n';
       filteredData.raw.forEach(s => {
         const laborRateToUse = s.applied_labor_rate || laborRate;
         const laborCost = (s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse;
@@ -245,22 +424,48 @@ export default function ReportsPage() {
           const productPrice = u.applied_unit_price || u.products?.unit_price || 0;
           return sum + (u.quantity_used || 0) * productPrice;
         }, 0);
-        const mats = s.service_product_usage.map(u => `${u.products?.sku || 'Unknown'} (${u.quantity_used})`).join(', ');
-        csvStr += `"${s.service_date}","${s.source_community_name}","${s.service_performed.replace(/"/g, '""')}","${s.crew_leader}","${mats}",${laborCost.toFixed(2)},${matCost.toFixed(2)}\n`;
+        const mats = s.service_product_usage.map(u => `${u.products?.sku || 'Unknown'} (${u.quantity_used})`).join('; ');
+        const totalBurn = laborCost + matCost;
+        csvStr += `"${s.service_date}","${s.source_community_name}","${s.service_performed.replace(/"/g, '""')}","${s.crew_leader}","${mats}",${totalBurn.toFixed(2)}\n`;
       });
     }
+
     const blob = new Blob([csvStr], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `tgs_report_${Date.now()}.csv`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    // Audit Log the download
+    supabase.from('audit_logs').insert({
+      user_id: profile?.id,
+      user_email: profile?.email,
+      action: 'DOWNLOAD',
+      metadata: {
+        filename,
+        tab: activeTab,
+        record_count: activeTab === 'raw' ? filteredData.raw.length : filteredData.monthly.length,
+        filters: { dateFrom, dateTo, selectedCommunities, selectedTypes }
+      }
+    }).then(({ error }) => {
+      if (error) console.error('Failed to log download audit:', error);
+    });
   };
 
   return (
-    <div style={{ padding: "32px 40px", maxWidth: 1600, margin: "0 auto" }}>
+    <div style={{ 
+      height: 'calc(100vh - 52px)', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      padding: "32px 40px 0 40px", 
+      width: '100%', 
+      maxWidth: 1600, 
+      margin: "0 auto", 
+      overflow: 'hidden' 
+    }}>
       
       {/* Header - Aligned with Analytics */}
       <div className="fade-up" style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -286,11 +491,11 @@ export default function ReportsPage() {
           <Loader2 size={32} className="animate-spin text-zinc-900" />
         </div>
       ) : (
-        <div className="fade-up" style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+        <div className="fade-up" style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flex: 1, minHeight: 0, marginBottom: 40 }}>
           
-          {/* Filters - High Density */}
-          <div style={{ width: 340, flexShrink: 0, position: 'sticky', top: 24 }}>
-            <div className="card" style={{ padding: 24, borderRadius: 32 }}>
+          {/* Filters - High Density & Independently Scrollable */}
+          <div style={{ width: 340, flexShrink: 0, height: '100%', overflowY: 'auto', paddingRight: 4 }}>
+            <div className="card" style={{ padding: 24, borderRadius: 32, marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
                 <Filter size={14} className="text-zinc-400" />
                 <span style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Filter Results</span>
@@ -365,7 +570,7 @@ export default function ReportsPage() {
             </div>
           </div>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
             
             {/* Dark Pulse Hero - Unified with Analytics */}
             <div className="fade-up bg-[#09090b] text-white rounded-[32px] p-8 shadow-xl space-y-6 border border-zinc-800">
@@ -411,100 +616,192 @@ export default function ReportsPage() {
               </div>
             </div>
 
-            {/* List Components */}
-            <div className="card" style={{ overflow: 'hidden', borderRadius: 32 }}>
-              <div className="flex bg-zinc-50 dark:bg-zinc-900/50 p-1">
-                <button onClick={() => setActiveTab('monthly')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all ${activeTab === 'monthly' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}>MONTHLY AGGREGATES</button>
-                <button onClick={() => setActiveTab('raw')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all ${activeTab === 'raw' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-700'}`}>SERVICE RECORDS</button>
+            {/* Unified Command Bar - Dynamic Height Fitting */}
+            <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, borderRadius: 32, overflow: 'hidden' }}>
+              <div className="flex bg-zinc-100/50 p-1.5 gap-1.5 border-b border-zinc-100 flex-shrink-0">
+                <button onClick={() => setActiveTab('financial')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all tracking-widest ${activeTab === 'financial' ? 'bg-white shadow-md border-2 border-zinc-900 text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'}`}>FINANCIAL INTELLIGENCE</button>
+                <button onClick={() => setActiveTab('monthly')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all tracking-widest ${activeTab === 'monthly' ? 'bg-white shadow-md border-2 border-zinc-900 text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'}`}>MONTHLY AGGREGATES</button>
+                <button onClick={() => setActiveTab('raw')} className={`flex-1 py-3 text-[10px] font-black rounded-2xl transition-all tracking-widest ${activeTab === 'raw' ? 'bg-white shadow-md border-2 border-zinc-900 text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'}`}>SERVICE RECORDS</button>
               </div>
-
-              <div style={{ overflowX: 'auto', maxHeight: 800 }}>
-                <table className="tgs-table">
-                  <thead>
-                    <tr>
-                      {activeTab === 'monthly' ? (
-                        <>
-                          <th style={{ padding: '16px 24px' }}>Month</th>
-                          <th>Community</th>
-                          <th style={{ textAlign: 'right' }}>Contract</th>
-                          <th>Labor Cost</th>
-                          <th>Material Cost</th>
-                          <th style={{ textAlign: 'center' }}>Precision</th>
-                          <th style={{ textAlign: 'center' }}>Visits</th>
-                        </>
-                      ) : (
-                        <>
-                          <th style={{ padding: '16px 24px' }}>Date</th>
-                          <th>Community</th>
-                          <th>Service Performed</th>
-                          <th>Crew Leader</th>
-                          <th style={{ textAlign: 'right' }}>Burn ($)</th>
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeTab === 'monthly' ? (
+ 
+            {/* Table Container - Dynamic Height */}
+            <div className="flex-1 flex flex-col" style={{ minHeight: 0 }}>
+              <div className="flex-1 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
+                <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', width: '100%', minHeight: 0 }}>
+                  <table className="tgs-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: 'white' }}>
+                      <tr>
+                        {activeTab === 'financial' ? (
+                          <>
+                              <th className="cursor-pointer" onClick={() => handleSort('commName')} style={{ padding: '14px 20px', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                                 <div className="flex items-center">COMMUNITY <SortIcon ik="commName" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('monthlyPrice')}>
+                                 REVENUE <SortIcon ik="monthlyPrice" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('overheadCost')}>
+                                 OVERHEAD <SortIcon ik="overheadCost" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('totalLaborCost')}>
+                                 LABOR <SortIcon ik="totalLaborCost" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('totalMaterialCost')}>
+                                 MATERIALS <SortIcon ik="totalMaterialCost" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('netProfit')}>
+                                 NET PROFIT <SortIcon ik="netProfit" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                              <th style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('netMargin')}>
+                                 MARGIN % <SortIcon ik="netMargin" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                              </th>
+                          </>
+                        ) : activeTab === 'monthly' ? (
+                          <>
+                            <th style={{ padding: '14px 20px', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', whiteSpace: 'nowrap', width: '1%', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('monthKey')}>
+                               <div className="flex items-center">MONTH <SortIcon ik="monthKey" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('commName')} style={{ color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               <div className="flex items-center">COMMUNITY <SortIcon ik="commName" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('monthlyPrice_agg')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               CONTRACT <SortIcon ik="monthlyPrice_agg" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('totalLaborCost')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               LABOR COST <SortIcon ik="totalLaborCost" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('totalMaterialCost')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               MATERIAL COST <SortIcon ik="totalMaterialCost" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('avgEff')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               PRECISION <SortIcon ik="avgEff" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('visits')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               VISITS <SortIcon ik="visits" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                          </>
+                        ) : (
+                          <>
+                            <th style={{ padding: '14px 20px', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', whiteSpace: 'nowrap', width: '1%', borderBottom: '1px solid #f1f5f9', background: 'white' }} className="cursor-pointer" onClick={() => handleSort('service_date')}>
+                               <div className="flex items-center">DATE <SortIcon ik="service_date" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('source_community_name')} style={{ color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px', whiteSpace: 'nowrap', width: '1%', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               <div className="flex items-center">COMMUNITY <SortIcon ik="source_community_name" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('service_performed')} style={{ color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               <div className="flex items-center">SERVICE PERFORMED <SortIcon ik="service_performed" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('crew_leader')} style={{ color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'left', padding: '14px 20px', whiteSpace: 'nowrap', width: '1%', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               <div className="flex items-center">CREW LEADER <SortIcon ik="crew_leader" currentSortKey={sortKey} currentSortOrder={sortOrder} /></div>
+                            </th>
+                            <th className="cursor-pointer" onClick={() => handleSort('totalBurn')} style={{ textAlign: 'right', color: '#a1a1aa', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%', position: 'relative', borderBottom: '1px solid #f1f5f9', background: 'white' }}>
+                               BURN ($) <SortIcon ik="totalBurn" align="right" currentSortKey={sortKey} currentSortOrder={sortOrder} />
+                            </th>
+                          </>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {activeTab === 'financial' ? (
                       filteredData.monthly.map((g, i) => (
-                        <tr key={i}>
-                          <td style={{ padding: '16px 24px', verticalAlign: 'middle' }}>
-                            <span style={{ fontSize: 11, fontWeight: 800, color: '#71717a' }}>{g.formattedMonth}</span>
+                        <tr key={i} className={g.netMargin < 0 ? 'bg-rose-50/20' : ''} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ verticalAlign: 'middle', padding: '14px 20px', textAlign: 'left' }}>
+                            <div className="flex flex-col gap-0.5 items-start">
+                              <button onClick={() => setSelectedCommunityForDrawer(g.communityId)} className="text-[13px] font-black text-zinc-900 hover:underline text-left leading-tight">{g.commName}</button>
+                              <span style={{ fontSize: 9, color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 900 }}>{formatDate(g.monthKey, 'month')}</span>
+                            </div>
                           </td>
-                          <td style={{ verticalAlign: 'middle' }}>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontSize: 13, color: '#71717a', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>{fmtFull(g.monthlyPrice)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontSize: 13, color: '#94a3b8', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>-{fmtFull(g.overheadCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontSize: 13, color: '#f43f5e', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>-{fmtFull(g.totalLaborCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontSize: 13, color: '#f59e0b', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>-{fmtFull(g.totalMaterialCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 900, fontSize: 14, color: g.netProfit > 0 ? '#10b981' : '#f43f5e', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>{fmtFull(g.netProfit)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>
+                             <div className="flex justify-end">
+                               <span style={{ fontSize: 11, fontWeight: 900, color: 'white', background: g.healthIcon === 'success' ? '#10b981' : g.healthIcon === 'danger' ? '#f43f5e' : '#f59e0b', padding: '2px 8px', borderRadius: 6 }}>
+                                 {g.netMargin.toFixed(1)}%
+                               </span>
+                             </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : activeTab === 'monthly' ? (
+                      filteredData.monthly.map((g, i) => (
+                        <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '14px 20px', verticalAlign: 'middle', textAlign: 'left', whiteSpace: 'nowrap', width: '1%' }}>
+                            <span style={{ fontSize: 10, fontWeight: 900, color: '#71717a' }}>{formatDate(g.monthKey, 'month')}</span>
+                          </td>
+                          <td style={{ verticalAlign: 'middle', padding: '14px 20px', textAlign: 'left' }}>
                             <button onClick={() => setSelectedCommunityForDrawer(g.communityId)} className="text-[13px] font-black text-zinc-900 hover:underline">{g.commName}</button>
                           </td>
-                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 700, fontSize: 13, color: '#71717a' }}>{fmtFull(g.monthlyPrice)}</td>
-                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(g.totalLaborCost)}</td>
-                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(g.totalMaterialCost)}</td>
-                          <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                            {g.avgEff !== null ? (
-                              <div className="flex flex-col items-center">
-                                <span style={{ fontSize: 12, fontWeight: 900, color: g.avgEff >= 90 && g.avgEff <= 110 ? '#10b981' : g.avgEff < 90 ? '#f43f5e' : '#f59e0b' }}>
-                                  {g.avgEff.toFixed(0)}%
-                                </span>
-                                <span style={{ fontSize: 8, fontWeight: 900, textTransform: 'uppercase', opacity: 0.6 }}>
-                                  {g.avgEff >= 90 && g.avgEff <= 110 ? 'Bullseye' : g.avgEff < 90 ? 'Over' : 'Under'}
-                                </span>
-                              </div>
-                            ) : <span className="text-zinc-300">—</span>}
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 700, fontSize: 13, color: '#71717a', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>{fmtFull(g.monthlyPrice)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13, padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>{fmtFull(g.totalLaborCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13, padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>{fmtFull(g.totalMaterialCost)}</td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', padding: '14px 36px 14px 20px', width: '1%' }}>
+                             <div className="flex justify-end items-center gap-1.5 p-1 px-2.5 rounded-full bg-zinc-100/50 border border-zinc-200 w-fit ml-auto">
+                               <div style={{ fontSize: 9, fontWeight: 900, color: '#18181b' }}>{(g.avgEff || 0).toFixed(1)}%</div>
+                             </div>
                           </td>
-                          <td style={{ textAlign: 'center', verticalAlign: 'middle' }}><span className="badge badge-zinc">{g.services.length}</span></td>
+                          <td style={{ textAlign: 'right', verticalAlign: 'middle', padding: '14px 36px 14px 20px', width: '1%' }}>
+                             <div className="inline-flex items-center justify-center p-1.5 px-3 rounded-lg bg-zinc-50 border border-zinc-100 text-[10px] font-black tabular-nums">{g.services.length}</div>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       filteredData.raw.map((s, i) => {
                         const laborRateToUse = s.applied_labor_rate || laborRate;
-                        const totalBurn = ((s.total_labor_hours_num || 0) * (s.crew_count || 1) * laborRateToUse) + s.service_product_usage.reduce((sum, u) => {
-                          const productPrice = u.applied_unit_price || u.products?.unit_price || 0;
-                          return sum + (u.quantity_used || 0) * productPrice;
-                        }, 0);
                         return (
-                          <tr key={i}>
-                            <td style={{ padding: '16px 24px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, fontWeight: 800, color: '#71717a' }}>{s.service_date}</span></td>
-                            <td style={{ verticalAlign: 'middle' }}>
+                          <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                            <td style={{ padding: '14px 20px', verticalAlign: 'middle', textAlign: 'left', whiteSpace: 'nowrap', width: '1%' }}><span style={{ fontSize: 10, fontWeight: 900, color: '#71717a' }}>{formatDate(s.service_date, 'day')}</span></td>
+                            <td style={{ verticalAlign: 'middle', padding: '14px 20px', textAlign: 'left', whiteSpace: 'nowrap', width: '1%' }}>
                               <button onClick={() => s.community_id && setSelectedCommunityForDrawer(s.community_id)} className="text-[12px] font-black text-zinc-900">{s.source_community_name}</button>
                             </td>
-                            <td style={{ verticalAlign: 'middle' }}><ServiceDisplay text={s.service_performed} limitLines={1} size="sm" /></td>
-                            <td style={{ verticalAlign: 'middle' }}><CrewLeaderDisplay name={s.crew_leader} crewMembers={s.crew_members} size="xs" /></td>
-                            <td style={{ textAlign: 'right', verticalAlign: 'middle', fontFamily: 'monospace', fontWeight: 800, fontSize: 13 }}>{fmtFull(totalBurn)}</td>
+                            <td style={{ verticalAlign: 'middle', padding: '14px 20px', textAlign: 'left' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                {s.service_product_usage.slice(0, 1).map((u: any, ui: number) => (
+                                  <span key={ui} style={{ fontSize: 11, fontWeight: 700, color: '#18181b', lineHeight: '1.2' }}>
+                                    • {u.products?.name || u.products?.sku || 'Service Performed'}
+                                  </span>
+                                ))}
+                                {s.service_product_usage.length > 1 && (
+                                  <span style={{ fontSize: 9, fontWeight: 900, color: '#a1a1aa', marginTop: 2, textTransform: 'uppercase' }}>
+                                    +{s.service_product_usage.length - 1} MORE
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td style={{ verticalAlign: 'middle', padding: '14px 20px', textAlign: 'left', whiteSpace: 'nowrap', width: '1%' }}>
+                              <div className="flex flex-col items-start text-left">
+                                <span className="text-[11px] font-bold text-zinc-800">{s.crew_leader}</span>
+                                {s.service_team_members?.length > 0 && (
+                                  <span className="text-[9px] font-black text-zinc-400 uppercase">+{s.service_team_members.length} CREW</span>
+                                )}
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'right', verticalAlign: 'middle', padding: '14px 36px 14px 20px', whiteSpace: 'nowrap', width: '1%' }}>
+                              <span style={{ fontFamily: 'monospace', fontWeight: 800, fontSize: 13, color: '#18181b' }}>
+                                {fmtFull((s.total_labor_hours_num || 0) * (s.crew_count || 1) * (s.applied_labor_rate || laborRate) + s.service_product_usage.reduce((sum: number, u: any) => sum + ((u.quantity_used || 0) * (u.applied_unit_price || u.products?.unit_price || 0)), 0))}
+                              </span>
+                            </td>
                           </tr>
                         );
                       })
                     )}
                   </tbody>
-                </table>
+                  </table>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
-      )}
+      </div>
+    )}
       
       <style dangerouslySetInnerHTML={{__html: `
         .filter-label { display: block; font-size: 10px; font-weight: 900; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-style: italic; }
         .btn-export { background: white; border: 1px solid #e2e8f0; padding: 10px 20px; border-radius: 16px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; transition: all 0.2s; cursor: pointer; }
         .btn-export:hover { border-color: #18181b; background: #fafafa; }
         .badge-zinc { background: #f4f4f5; color: #18181b; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; border: 1px solid #e4e4e7; }
+        .tgs-table { width: auto !important; border-collapse: collapse; margin: 0 auto; }
       `}} />
       
       {selectedCommunityForDrawer && (
@@ -514,37 +811,4 @@ export default function ReportsPage() {
   );
 }
 
-function MultiSelectCombobox({ options, selected, onChange, placeholder }: any) {
-  const [query, setQuery] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const available = options.filter((o:any) => !selected.includes(o.value) && o.label.toLowerCase().includes(query.toLowerCase()));
-  const toggle = (val: string) => {
-    if (selected.includes(val)) onChange(selected.filter((v:any) => v !== val));
-    else { onChange([...selected, val]); setQuery(''); }
-  };
-  return (
-    <div className="relative">
-      <div className="input flex items-center p-2 gap-2" style={{ borderRadius: 12 }}>
-        <Search size={14} className="text-zinc-400" />
-        <input type="text" value={query} onChange={e => { setQuery(e.target.value); setIsOpen(true); }} onFocus={() => setIsOpen(true)} onBlur={() => setTimeout(() => setIsOpen(false), 200)} placeholder={placeholder} className="bg-transparent outline-none w-full text-xs font-bold" />
-      </div>
-      {selected.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          {selected.map((v:any) => (
-            <div key={v} className="bg-zinc-100 text-zinc-700 px-2 py-1 rounded-lg text-[10px] font-black flex items-center gap-1.5 border border-zinc-200">
-              {options.find((o:any) => o.value === v)?.label}
-              <button onClick={() => toggle(v)}><X size={10} /></button>
-            </div>
-          ))}
-        </div>
-      )}
-      {isOpen && available.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-zinc-200 rounded-xl mt-1 max-vh-[200px] overflow-y-auto z-50 shadow-xl p-1">
-          {available.map((o:any) => (
-            <div key={o.value} onClick={() => toggle(o.value)} className="p-2 text-xs font-bold hover:bg-zinc-50 rounded-lg cursor-pointer">{o.label}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+// SortIcon and MultiSelectCombobox removed from here (now at top)

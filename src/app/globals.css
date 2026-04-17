@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 @custom-variant dark (&:where(.dark-mode-disabled));
 
 :root {
@@ -174,3 +175,30 @@ body {
 .fade-up-2 { animation-delay: 0.1s; }
 .fade-up-3 { animation-delay: 0.15s; }
 .fade-up-4 { animation-delay: 0.2s; }
+
+/* Map Animations */
+@keyframes markerPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(217, 119, 6, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+}
+
+.map-marker-pulse {
+  animation: markerPulse 2s infinite;
+  border-radius: 50%;
+}
+
+@keyframes mapPing {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(2.5); opacity: 0; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.map-ping {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--highlight);
+  animation: mapPing 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}

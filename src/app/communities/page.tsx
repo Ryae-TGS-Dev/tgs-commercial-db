@@ -25,6 +25,14 @@ export default function CommunitiesPage() {
   const [mergeMap, setMergeMap] = useState<Record<string, 'area' | 'zone' | 'notes' | 'discard'>>({});
   const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(null);
 
+  useEffect(() => {
+    const originalBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+    };
+  }, []);
+
   const fetchCompanies = useCallback(async () => {
     const { data } = await supabase
       .from('communities')
@@ -107,7 +115,7 @@ export default function CommunitiesPage() {
   }, [query, company]);
 
   return (
-    <div style={{ padding: '40px 48px', maxWidth: 1600, margin: '0 auto' }}>
+    <div style={{ height: 'calc(100vh - 52px)', display: 'flex', flexDirection: 'column', padding: '40px 48px 0 48px', maxWidth: 1600, margin: '0 auto', overflow: 'hidden' }}>
       {/* Header - Unified Site Styling */}
       <div className="fade-up" style={{ marginBottom: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
@@ -157,11 +165,12 @@ export default function CommunitiesPage() {
       </div>
 
       {/* Table - Optimized for perfect alignment and consistency */}
-      <div className="fade-up fade-up-2 card" style={{ overflow: 'hidden', borderRadius: 24, border: '1px solid #f1f5f9' }}>
-        <table className="tgs-table">
-          <thead>
+      <div className="fade-up fade-up-2 card" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, borderRadius: 24, border: '1px solid #f1f5f9', marginBottom: 40, padding: 0 }}>
+  <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto', minHeight: 0 }}>
+          <table className="tgs-table" style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+            <thead style={{ position: 'sticky', top: 0, zIndex: 10, background: '#fafafa' }}>
             <tr style={{ background: '#fafafa' }}>
-              {isPowerUser && <th style={{ width: 40, padding: '16px 24px' }}><CheckSquare size={14} color="var(--text-muted)" /></th>}
+              {isPowerUser && <th style={{ width: 40, padding: '16px 24px', textAlign: 'center' }}>MERGE</th>}
               <th style={{ padding: '16px 24px' }}>Community</th>
               <th>Company</th>
               <th style={{ textAlign: 'right' }}>Community Area</th>
@@ -264,6 +273,7 @@ export default function CommunitiesPage() {
           </div>
         )}
       </div>
+    </div>
 
       <CommunityDrawer 
         communityId={selectedCommunityId} 

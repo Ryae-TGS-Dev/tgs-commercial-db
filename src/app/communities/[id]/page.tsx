@@ -12,7 +12,8 @@ import {
   ClipboardList,
   Target,
   Maximize,
-  PenLine
+  PenLine,
+  MapPin
 } from 'lucide-react';
 import { EditCommunityModal } from '@/components/EditCommunityModal';
 import { EditLogModal } from '@/components/EditLogModal';
@@ -138,6 +139,15 @@ export default async function CommunityDetailPage({ params }: { params: Promise<
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
               <div style={{ background: '#18181b', color: 'white', padding: '4px 8px', borderRadius: 6, fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Community Profile</div>
               {community.status === 'Active' && <div style={{ color: '#10b981', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}><div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} /> ACTIVE REVENUE STREAM</div>}
+              {community.latitude ? (
+                <div style={{ color: '#8b5cf6', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                   <MapPin size={12} /> PINNED TO MAP
+                </div>
+              ) : (
+                <div style={{ color: '#71717a', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                   <MapPin size={12} className="opacity-40" /> UNMAPPED
+                </div>
+              )}
             </div>
             <h1 style={{ fontSize: 42, fontWeight: 900, margin: 0, letterSpacing: '-0.04em' }}>{community.name}</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
